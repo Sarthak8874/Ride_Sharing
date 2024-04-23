@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 // import { Label } from "../ui/label";
 import { Input } from "@/components/ui/inputA";
 import { cn } from "@/utils/cn";
+import { BackgroundBeams } from "./ui/background-beams";
 
 export function SigninForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -12,7 +13,7 @@ export function SigninForm() {
   };
   return (
     <div className="w-[350px] md:w-full mx-auto lg:w-full h-[100vh] flex justify-center items-center ">
-      <div className="max-w-md  w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+      <div className="max-w-md z-[100] w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
         <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
         Welcome back 
         </h2>
@@ -41,6 +42,7 @@ export function SigninForm() {
           <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
         </form>
       </div>
+      <BackgroundBeams/>
     </div>
   );
 }
