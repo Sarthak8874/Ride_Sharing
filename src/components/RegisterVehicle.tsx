@@ -3,7 +3,7 @@
 import React from "react";
 import {Label} from "@/components/ui/label";
 // import { Label } from "../ui/label";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/inputA";
 import { cn } from "@/utils/cn";
 import {
   IconBrandGithub,
