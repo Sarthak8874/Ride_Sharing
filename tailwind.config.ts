@@ -81,7 +81,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"),[addVariablesForColors], require("daisyui"),require('@headlessui/tailwindcss')({ prefix: 'ui' })],
+  plugins: [require("tailwindcss-animate"),[addVariablesForColors]],
  
 } satisfies Config
 
