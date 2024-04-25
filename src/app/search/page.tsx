@@ -25,7 +25,7 @@ const page = () => {
     latitude: null,
     longitude: null,
   });
-
+  const sourceInputRef = React.useRef<HTMLInputElement>(null);
   useEffect(() => {
     const getLocation = () => {
       if (navigator.geolocation) {
@@ -70,30 +70,51 @@ const page = () => {
   const handleSourceSuggestion = (e: string) => {
     Suggestion(e, setsourceSuggestions);
   };
+    // Handle clicks outside the source suggestion dropdown
+    const handleClickOutside = (event: any) => {
+      if (sourceInputRef.current && !sourceInputRef.current.contains(event.target)) {
+        setsourceSuggestions([]);
+      }
+    };
+  
+    useEffect(() => {
+      // Add event listener on document mount
+      document.addEventListener("click", handleClickOutside);
+  
+      // Cleanup function on unmount
+      return () => document.removeEventListener("click", handleClickOutside);
+    }, []);
   return (
     <>
       {/* <div className="flex h-full"> */}
       <div className="flex bg-[#11184b] px-[80px] py-[40px] flex-row justify-between items-center">
-        <Input
-          value={source}
-          onChange={(e) => {
-            setSource(e?.target?.value);
-            handleSourceSuggestion(e?.target?.value);
-          }}
-          placeholder="From"
-        />
-        {/* <ul>
-          {sourcesuggestions.map((place, index) => (
-            <li
-              key={index}
-              onClick={() => {
-                setSource(place.description);
-              }}
-            >
-              {place.description}
-            </li>
-          ))}
-        </ul> */}
+        <div className="relative">
+          <Input
+            value={source}
+            ref={sourceInputRef}
+            onChange={(e) => {
+              setSource(e?.target?.value);
+              handleSourceSuggestion(e?.target?.value);
+            }}
+            placeholder="From"
+          />
+          <div className="absolute">
+            <ul>
+              {sourcesuggestions.map((place, index) => (
+                <li
+                  className=""
+                  key={index}
+                  onClick={() => {
+                    setSource(place.description);
+                    setsourceSuggestions([]);
+                  }}
+                >
+                  {place.description}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
         <Input
           value={destination}
           onChange={(e) => setDestination(e?.target?.value)}
@@ -108,7 +129,7 @@ const page = () => {
         />
         <Button variant="outline">Search</Button>
       </div>
-      <Map />
+      {/* <Map /> */}
       {/* </div> */}
     </>
   );
