@@ -1,5 +1,5 @@
 "use client";
-
+import { cn } from "@/utils/cn";
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/inputA";
 import { DatePickerDemo } from "./Datepicker";
@@ -95,67 +95,90 @@ const page = () => {
   return (
     <>
       {/* <div className="flex h-full"> */}
-      <div className="flex flex-col gap-[20px] bg-[#11184b] px-[80px] py-[40px]  justify-between items-center">
-        <div className="relative">
-          <Input
-            value={source}
-            ref={sourceInputRef}
-            onChange={(e) => {
-              setSource(e?.target?.value);
-              handleSourceSuggestion(e?.target?.value);
-            }}
-            placeholder="From"
-          />
-          <div className="absolute">
-            <ul>
-              {sourcesuggestions.map((place, index) => (
-                <li
-                  className=""
-                  key={index}
-                  onClick={() => {
-                    setSource(place.description);
-                    setsourceSuggestions([]);
-                  }}
-                >
-                  {place.description}
-                </li>
-              ))}
-            </ul>
-          </div>
+      <div className="h-[93.8vh] bg-[#11184b] ">
+        <div className="flex w-full justify-around pt-[20px]">
+          <h2 className="font-bold text-[30px]  text-[#FFF]">Publish a Ride</h2>
         </div>
-        <Input
-          value={destination}
-          onChange={(e) => setDestination(e?.target?.value)}
-          placeholder="to"
-        />
-        <DatePickerDemo />
-        <Input
-          type="number"
-          value={passengers}
-          onChange={(e) => setPassengers(e?.target?.value)}
-          placeholder="Passengers"
-        />
-        <DatePicker
-          placeholderText="Pick-Up Time"
-          selected={souceTime}
-          onChange={(time: any) => setSouceTime(time)}
-          showTimeSelect
-          showTimeSelectOnly
-          timeIntervals={15}
-          dateFormat="h:mm aa"
-          timeCaption="Time"
-        />
-        <DatePicker
-          placeholderText="Drop Time"
-          selected={destinationTime}
-          onChange={(time: any) => setDestinantionTime(time)}
-          showTimeSelect
-          showTimeSelectOnly
-          timeIntervals={15}
-          dateFormat="h:mm aa"
-          timeCaption="Time"
-        />
-        <Button variant="outline">Search</Button>
+        <div className="flex flex-col gap-[20px] px-[80px] py-[40px]  justify-between items-center">
+          <div className="relative">
+            <Input
+              value={source}
+              ref={sourceInputRef}
+              onChange={(e) => {
+                setSource(e?.target?.value);
+                handleSourceSuggestion(e?.target?.value);
+              }}
+              placeholder="From"
+            />
+            <div className="absolute">
+              <ul>
+                {sourcesuggestions.map((place, index) => (
+                  <li
+                    className=""
+                    key={index}
+                    onClick={() => {
+                      setSource(place.description);
+                      setsourceSuggestions([]);
+                    }}
+                  >
+                    {place.description}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <Input
+            value={destination}
+            onChange={(e) => setDestination(e?.target?.value)}
+            placeholder="to"
+          />
+          <DatePickerDemo />
+          <Input
+            type="number"
+            value={passengers}
+            onChange={(e) => setPassengers(e?.target?.value)}
+            placeholder="Passengers"
+          />
+          <DatePicker
+            className={cn(
+              `flex h-10 w-full border-none bg-gray-50 dark:bg-zinc-800 text-black dark:text-white shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
+        file:text-sm file:font-medium placeholder:text-neutral-400 dark:placeholder-text-neutral-600 
+        focus-visible:outline-none focus-visible:ring-[2px]  focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-600
+         disabled:cursor-not-allowed disabled:opacity-50
+         dark:shadow-[0px_0px_1px_1px_var(--neutral-700)]
+         group-hover/input:shadow-none transition duration-400
+         `
+            )}
+            placeholderText="Pick-Up Time"
+            selected={souceTime}
+            onChange={(time: any) => setSouceTime(time)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={15}
+            dateFormat="h:mm aa"
+            timeCaption="Time"
+          />
+          <DatePicker
+            placeholderText="Drop Time"
+            className={cn(
+              `flex h-10 w-full border-none bg-gray-50 dark:bg-zinc-800 text-black dark:text-white shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
+        file:text-sm file:font-medium placeholder:text-neutral-400 dark:placeholder-text-neutral-600 
+        focus-visible:outline-none focus-visible:ring-[2px]  focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-600
+         disabled:cursor-not-allowed disabled:opacity-50
+         dark:shadow-[0px_0px_1px_1px_var(--neutral-700)]
+         group-hover/input:shadow-none transition duration-400
+         `
+            )}
+            selected={destinationTime}
+            onChange={(time: any) => setDestinantionTime(time)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={15}
+            dateFormat="h:mm aa"
+            timeCaption="Time"
+          />
+          <Button variant="outline">Publish</Button>
+        </div>
       </div>
     </>
   );
