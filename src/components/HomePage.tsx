@@ -34,12 +34,12 @@ function HomePage() {
   return (
     <div>
       <div className="flex flex-col items-center justify-center h-[40rem]  ">
-        <h2 className="text-neutral-600 dark:text-neutral-200 md:text-xl text-extrabold sm:text-base  ">
+        <h2 className="text-neutral-600 dark:text-neutral-200 md:text-red-800 lg:text-green-900 md:text-lg lg:text-xl text-extrabold sm:text-base  text-center ">
           Revolutionize transportation with our blockchain-powered peer-to-peer
           ridesharing platform.
         </h2>
         <TypewriterEffectSmooth words={words} />
-        <p className="w-[90%] text-neutral-600 mx-auto text-center h-10 rounded-xl  dark:border-white border-transparent  text-lg">
+        <p className="w-[90%] text-neutral-600 mx-auto text-center h-10 rounded-xl  dark:border-white border-transparent  text-sm md:text-lg">
           Join our community to experience secure, transparent, and efficient
           ridesharing like never before
         </p>
