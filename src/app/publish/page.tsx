@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/inputA";
 import { DatePickerDemo } from "./Datepicker";
 import { Button } from "@/components/ui/button";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 import axios from "axios";
 
-import BookComponent from "./BookComponent";
 interface GeoLocation {
   latitude: number | null;
   longitude: number | null;
@@ -17,6 +19,8 @@ interface Prediction {
 
 const page = () => {
   const [source, setSource] = React.useState<string>("");
+  const [souceTime, setSouceTime] = useState(null);
+  const [destinationTime, setDestinantionTime] = useState(null);
   const [destination, setDestination] = React.useState<string>("");
   const [sourcesuggestions, setsourceSuggestions] = React.useState<
     Prediction[]
@@ -71,24 +75,27 @@ const page = () => {
   const handleSourceSuggestion = (e: string) => {
     Suggestion(e, setsourceSuggestions);
   };
-    // Handle clicks outside the source suggestion dropdown
-    const handleClickOutside = (event: any) => {
-      if (sourceInputRef.current && !sourceInputRef.current.contains(event.target)) {
-        setsourceSuggestions([]);
-      }
-    };
-  
-    useEffect(() => {
-      // Add event listener on document mount
-      document.addEventListener("click", handleClickOutside);
-  
-      // Cleanup function on unmount
-      return () => document.removeEventListener("click", handleClickOutside);
-    }, []);
+  // Handle clicks outside the source suggestion dropdown
+  const handleClickOutside = (event: any) => {
+    if (
+      sourceInputRef.current &&
+      !sourceInputRef.current.contains(event.target)
+    ) {
+      setsourceSuggestions([]);
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener on document mount
+    document.addEventListener("click", handleClickOutside);
+
+    // Cleanup function on unmount
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
   return (
     <>
       {/* <div className="flex h-full"> */}
-      <div className="flex bg-[#11184b] px-[80px] py-[40px] flex-row justify-between items-center">
+      <div className="flex flex-col gap-[20px] bg-[#11184b] px-[80px] py-[40px]  justify-between items-center">
         <div className="relative">
           <Input
             value={source}
@@ -128,11 +135,28 @@ const page = () => {
           onChange={(e) => setPassengers(e?.target?.value)}
           placeholder="Passengers"
         />
+        <DatePicker
+          placeholderText="Pick-Up Time"
+          selected={souceTime}
+          onChange={(time: any) => setSouceTime(time)}
+          showTimeSelect
+          showTimeSelectOnly
+          timeIntervals={15}
+          dateFormat="h:mm aa"
+          timeCaption="Time"
+        />
+        <DatePicker
+          placeholderText="Drop Time"
+          selected={destinationTime}
+          onChange={(time: any) => setDestinantionTime(time)}
+          showTimeSelect
+          showTimeSelectOnly
+          timeIntervals={15}
+          dateFormat="h:mm aa"
+          timeCaption="Time"
+        />
         <Button variant="outline">Search</Button>
       </div>
-      <BookComponent/>
-      {/* <Map /> */}
-      {/* </div> */}
     </>
   );
 };
