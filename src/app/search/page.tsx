@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/inputA";
 import { DatePickerDemo } from "./Datepicker";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import Map from "./map";
+
+import BookComponent from "./BookComponent";
 interface GeoLocation {
   latitude: number | null;
   longitude: number | null;
@@ -129,6 +130,7 @@ const page = () => {
         />
         <Button variant="outline">Search</Button>
       </div>
+      <BookComponent/>
       {/* <Map /> */}
       {/* </div> */}
     </>
