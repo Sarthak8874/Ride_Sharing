@@ -1,130 +1,98 @@
+"use-client";
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
-  
-  const invoices = [
-    // {
-    //   invoice: "INV001",
-    //   paymentStatus: "Paid",
-    //   totalAmount: "$250.00",
-    //   paymentMethod: "Credit Card",
-    // },
-    // {
-    //   invoice: "INV002",
-    //   paymentStatus: "Pending",
-    //   totalAmount: "$150.00",
-    //   paymentMethod: "PayPal",
-    // },
-    // {
-    //   invoice: "INV003",
-    //   paymentStatus: "Unpaid",
-    //   totalAmount: "$350.00",
-    //   paymentMethod: "Bank Transfer",
-    // },
-    {
-        id: 1,
-        username: "user1",
-        document: "document1.jpg",
-        status: "pending",
-    },
-    {
-        id: 2,
-        username: "user2",
-        document: "document2.jpg",
-        status: "pending",
-    },
-    {
-        id: 3,
-        username: "user3",
-        document: "document3.jpg",
-        status: "pending",
-    },
-    {
-        id: 4,
-        username: "user4",
-        document: "document4.jpg",
-        status: "rejected",
-    },
-    {
-        id: 5,
-        username: "user5",
-        document: "document5.jpg",
-        status: "rejected",
-    },
-    
-  ]
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableFooter,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
-  
-  
-  export default function RequestTables() {
+type Request = {
+	id: number;
+	username: string;
+	document: string;
+	status: string;
+};
 
-    const [requests, setRequests] = useState([]);
-    const handleVerify = (requestId: number, status: string) => {
-        const updatedRequests = requests.map((request) =>
-            request.id === requestId ? { ...request, status } : request
-        );
-        setRequests(updatedRequests);
-    };
-    return (
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">ID</TableHead>
-            <TableHead>Username</TableHead>
-            <TableHead>Document</TableHead>
-            <TableHead className="text-right">Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.id}>
-              <TableCell className="font-medium">{invoice.id}</TableCell>
-              <TableCell>{invoice.username}</TableCell>
-              <TableCell>{invoice.document}</TableCell>
-              <TableCell className="text-right">{invoice.status}</TableCell>
-                <TableCell className="text-right">
-                
-										<button
-											onClick={() =>
-												handleVerify(
-													request.id,
-													"approved"
-												)
-											}
-										>
-											Approve
-										</button>
-										<button
-											onClick={() =>
-												handleVerify(
-													request.id,
-													"rejected"
-												)
-											}
-										>
-											Reject
-										</button>
-									
-                </TableCell>    
-            </TableRow>
-          ))}
-        </TableBody>
-        {/* <TableFooter>
+type Props = {
+	val: string;
+	req: Request[];
+	setReq: React.Dispatch<React.SetStateAction<Request[]>>;
+};
+
+const Form: React.FC<Props> = ({ val, req, setReq }) => {
+	// const [requests, setRequests] = useState(req.filter((request) => request.status === val));
+	const requests = req.filter((request) => request.status === val);
+	// console.log(requests);
+
+	const handleVerify = (requestId: number, status: string) => {
+		const updatedRequests = req.map((request) =>
+			request.id === requestId ? { ...request, status } : request
+		);
+		setReq(updatedRequests);
+	};
+
+	return (
+		<Table>
+			<TableCaption>A list of your recent invoices.</TableCaption>
+			<TableHeader>
+				<TableRow>
+					<TableHead className="w-[100px] font-bold">ID</TableHead>
+					<TableHead className=" w-[250px] font-bold">Username</TableHead>
+					<TableHead className="w-[300px] font-bold">Document</TableHead>
+					<TableHead className="w-[150px] text-center font-bold">Status</TableHead>
+					<TableHead className="w-[350px] text-center font-bold ">
+						Actions
+					</TableHead>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{requests.map((request) => (
+					<TableRow key={request.id}>
+						<TableCell className="font-medium">
+							{request.id}
+						</TableCell>
+						<TableCell>{request.username}</TableCell>
+						<TableCell>{request.document}</TableCell>
+						<TableCell className="text-center">
+							{request.status}
+						</TableCell>
+						<TableCell className="flex justify-center gap-4">
+							{val != "approved" && (
+								<Button
+									onClick={() =>
+										handleVerify(request.id, "approved")
+									}
+								>
+									Approve
+								</Button>
+							)}
+							{val != "rejected" && (
+								<Button
+									onClick={() =>
+										handleVerify(request.id, "rejected")
+									}
+								>
+									Reject
+								</Button>
+							)}
+						</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
+			{/* <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Total</TableCell>
             <TableCell className="text-right">$2,500.00</TableCell>
           </TableRow>
         </TableFooter> */}
-      </Table>
-    )
-  }
-  
+		</Table>
+	);
+};
+
+export default Form;
