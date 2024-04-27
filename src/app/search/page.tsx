@@ -86,54 +86,56 @@ const page = () => {
       return () => document.removeEventListener("click", handleClickOutside);
     }, []);
   return (
-    <>
-      {/* <div className="flex h-full"> */}
-      <div className="flex bg-[#11184b] px-[80px] py-[40px] flex-row justify-between items-center">
-        <div className="relative">
-          <Input
-            value={source}
-            ref={sourceInputRef}
-            onChange={(e) => {
-              setSource(e?.target?.value);
-              handleSourceSuggestion(e?.target?.value);
-            }}
-            placeholder="From"
-          />
-          <div className="absolute">
-            <ul>
-              {sourcesuggestions.map((place, index) => (
-                <li
-                  className=""
-                  key={index}
-                  onClick={() => {
-                    setSource(place.description);
-                    setsourceSuggestions([]);
-                  }}
-                >
-                  {place.description}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <Input
-          value={destination}
-          onChange={(e) => setDestination(e?.target?.value)}
-          placeholder="to"
-        />
-        <DatePickerDemo />
-        <Input
-          type="number"
-          value={passengers}
-          onChange={(e) => setPassengers(e?.target?.value)}
-          placeholder="Passengers"
-        />
-        <Button variant="outline">Search</Button>
-      </div>
-      <BookComponent/>
-      {/* <Map /> */}
-      {/* </div> */}
-    </>
+		<>
+			{/* <div className="flex h-full"> */}
+			<div className="flex bg-[#11184b] px-[80px] py-[40px] flex-row justify-between items-center">
+				<div className="relative">
+					<Input
+						value={source}
+						ref={sourceInputRef}
+						onChange={(e) => {
+							setSource(e?.target?.value);
+							handleSourceSuggestion(e?.target?.value);
+						}}
+						placeholder="From"
+					/>
+					{sourcesuggestions.length > 0 && (
+						<div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
+							<ul className="divide-y divide-gray-200">
+								{sourcesuggestions.map((place, index) => (
+									<li
+										className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
+										key={index}
+										onClick={() => {
+											setSource(place.description);
+											setsourceSuggestions([]);
+										}}
+									>
+										{place.description}
+									</li>
+								))}
+							</ul>
+						</div>
+					)}
+				</div>
+				<Input
+					value={destination}
+					onChange={(e) => setDestination(e?.target?.value)}
+					placeholder="to"
+				/>
+				<DatePickerDemo />
+				<Input
+					type="number"
+					value={passengers}
+					onChange={(e) => setPassengers(e?.target?.value)}
+					placeholder="Passengers"
+				/>
+				<Button variant="outline">Search</Button>
+			</div>
+			<BookComponent />
+			{/* <Map /> */}
+			{/* </div> */}
+		</>
   );
 };
 
