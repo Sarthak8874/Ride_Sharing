@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const dbConnect = require("./config/database");
 const routes = require("./routes/routes");
+const bookingRoute = require("./routes/Booking");
 require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 
@@ -14,5 +15,6 @@ app.listen(PORT,(req,res)=>{
 })
 
 app.use("/api/v1",routes);
+app.use("/api/v1",bookingRoute);
 
 dbConnect();
