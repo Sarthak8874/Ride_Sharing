@@ -27,9 +27,8 @@ router.post("/test", async (req, res) => {
     });
 });
 
+//signIn, signUp
 router.use("/user",userRoutes);
-
-
 
 //vehicle registration
 router.post("/vehicle/register", async (req, res) => {
