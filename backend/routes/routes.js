@@ -1,6 +1,7 @@
 const express = require("express");
 const Contact = require("../models/Contact");
 const Vehicle = require("../models/Vehicle");
+const User = require("../models/User");
 const { Data } = require("@react-google-maps/api");
 const { error } = require("console");
 const router = express.Router();
@@ -24,6 +25,7 @@ router.post("/test", async (req, res) => {
     });
 });
 
+//vehicle registration
 router.post("/vehicle/register", async (req, res) => {
     try {
         const {
@@ -76,5 +78,37 @@ router.post("/vehicle/register", async (req, res) => {
         });
     }
 });
+
+//edit profile details (having some issue, need to check)
+router.put("users/:id", async (req, res) => {
+    try {
+        console.log("HII",req.params);
+       const username=req.params.id;
+       const user = await User.findOneAndUpdate({ username: username }, req.body, {
+         new: true,
+         runValidators: true,
+       });
+   
+       if (!user) {
+        return res.status(404).json({
+            status: false,
+            message: "User Not Found",
+            error: e,
+        });
+       }
+   
+       return res.status(200).json({
+        status: true,
+        message: "Vehicle Registration Done",
+        new: user,
+    });
+    } catch (err) {
+        return res.status(500).json({
+            status: false,
+            message: "Failed to update user details",
+            error: e,
+        });
+    }
+   });
 
 module.exports = router;
