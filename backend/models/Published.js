@@ -6,23 +6,43 @@ const publishedSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    sourceName:{
+        type: String,
+        required: true
+    },
     destinationId: {
+        type: String,
+        required: true,
+        validate: {
+            validator: function (v) {
+                return v !== this.sourceId;
+            },
+            message: "Destination must be different from source"
+        }
+    },
+    destinationName:{
         type: String,
         required: true
     },
     vehicleId: {
-        type: Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref: 'Vehicle',
         required: true
     },
     driverId: {
-        type: Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     etherCost: {
         type: Number,
-        required: true
+        required: true,
+        validate: {
+            validator: function (v) {
+                return v > 0;
+            },
+            message: "Ether cost must be greater than 0"
+        }
     },
     distance: {
         type: Number,
@@ -30,7 +50,13 @@ const publishedSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: true
+        required: true,
+        validate: {
+            validator: function (v) {
+                return v >= new Date();
+            },
+            message: "Date must be greater than or equal to current date"
+        }
     },
     time: {
         type: String,
@@ -46,20 +72,31 @@ const publishedSchema = new mongoose.Schema({
     },
     numberOfSeats: {
         type: Number,
-        required: true
+        required: true,
+        validate: {
+            validator: function (v) {
+                return v > 0;
+            },
+            message: "Number of seats must be greater than 0"
+        }
     },
-    numberOfBookedSeats: {
+    numberOfAvailableSeats: {
         type: Number,
-        default: 0 
+        default: function () {
+            return this.numberOfSeats; 
+        }
     },
     rideBooked: {
         type: Boolean,
         default: false 
     },
     transactionIds: [{
-        type: Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref: 'Transactions'
     }]
+}, {
+    timestamps: true
+    
 });
 
 module.exports = mongoose.model("Published", publishedSchema);

@@ -5,6 +5,8 @@ const User = require("../models/User");
 const { Data } = require("@react-google-maps/api");
 const { error } = require("console");
 const router = express.Router();
+const userRoutes = require("./user");
+
 const cloudinary = require("cloudinary").v2;
 
 router.get("/", (req, res) => {
@@ -24,6 +26,10 @@ router.post("/test", async (req, res) => {
         message: "testing done",
     });
 });
+
+router.use("/user",userRoutes);
+
+
 
 //vehicle registration
 router.post("/vehicle/register", async (req, res) => {

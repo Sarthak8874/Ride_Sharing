@@ -11,17 +11,17 @@ const transactionSchema = new mongoose.Schema({
         required: true
     },
     vehicleId: {
-        type: Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref: 'Vehicle',
         required: true
     },
     riderId: {
-        type: Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     driverId: {
-        type: Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
