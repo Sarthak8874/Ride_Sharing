@@ -60,8 +60,8 @@ const userSchema = new mongoose.Schema({
         default: 0
     },
     vehicleIds: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Vehicle'
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'Vehicle',
     }]
 
 });
