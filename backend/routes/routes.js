@@ -1,6 +1,8 @@
 const express = require("express");
 const Contact = require("../models/Contact");
 const router = express.Router();
+const userRoutes = require("./user");
+
 
 router.post("/test",async(req,res)=>{
     const {firstName,lastName,message,email} = req.body;
@@ -12,6 +14,10 @@ router.post("/test",async(req,res)=>{
         message:"testing done"
     });
 });
+
+router.use("/user",userRoutes);
+
+
 
 
 
