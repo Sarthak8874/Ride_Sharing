@@ -1,3 +1,4 @@
+const cloudinary = require("cloudinary").v2;
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -13,6 +14,13 @@ app.use(express.json());
 app.listen(PORT,(req,res)=>{
     console.log(`App started @ ${PORT}`);
 })
+
+cloudinary.config({ 
+  cloud_name: 'dpftc2sdu', 
+  api_key:  process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET 
+});
+console.log(cloudinary.config());
 
 app.use("/api/v1",routes);
 app.use("/api/v1",bookingRoute);
