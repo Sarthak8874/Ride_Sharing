@@ -28,8 +28,8 @@ function OurServices() {
                         <CardItem translateZ="100" className="w-full mt-4">
                             <Image
                                 src="/Images/person-ride.png"
-                                height="100"
-                                width="100"
+                                height="50"
+                                width="50"
                                 className="h-60 scale-75 w-full object-cover rounded-xl group-hover/card:shadow-xl"
                                 alt="thumbnail"
                             />
