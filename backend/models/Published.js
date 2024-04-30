@@ -25,12 +25,12 @@ const publishedSchema = new mongoose.Schema({
         required: true
     },
     vehicleId: {
-        type: Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref: 'Vehicle',
         required: true
     },
     driverId: {
-        type: Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
@@ -91,7 +91,7 @@ const publishedSchema = new mongoose.Schema({
         default: false 
     },
     transactionIds: [{
-        type: Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref: 'Transactions'
     }]
 }, {
