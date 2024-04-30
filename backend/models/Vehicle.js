@@ -1,11 +1,7 @@
 const mongoose = require("mongoose");
 
 const vehicleSchema = new mongoose.Schema({
-    vehicleNo: {
-        type: String,
-        required: true
-    },
-    papers: {
+    vehicleNumber: {
         type: String,
         required: true
     },
@@ -13,15 +9,31 @@ const vehicleSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    ownerId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+    ownerUsername:{
+        type: String,
+        required: true
+    },
+    ownerIdProof: {
+        type: String,
+        required: true
+    },
+    // ownerId: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User',
+    //     required: true,
+    // },
+    vehicleRC: {
+        type: String,
+        required: false
     },
     approvedStatus: {
         type: String,
-        enum: ['approve', 'pending', 'rejected'],
-        default: 'pending'
+        enum: ['Approved', 'Pending', 'Rejected'],
+        default: 'Pending'
+    },
+    vehicleImage:{
+        type: String,
+        required: true
     }
 
 });
