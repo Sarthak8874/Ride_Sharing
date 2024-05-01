@@ -90,6 +90,10 @@ const publishedSchema = new mongoose.Schema({
         type: Boolean,
         default: false 
     },
+    riders:{
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User'
+    },
     transactionIds: [{
         type:mongoose.Schema.Types.ObjectId,
         ref: 'Transactions'
