@@ -6,6 +6,7 @@ const { Data } = require("@react-google-maps/api");
 const { error } = require("console");
 const router = express.Router();
 const userRoutes = require("./user");
+const bookingRoute = require("./Booking");
 
 const cloudinary = require("cloudinary").v2;
 
@@ -29,6 +30,9 @@ router.post("/test", async (req, res) => {
 
 //signIn, signUp
 router.use("/user",userRoutes);
+
+// publish, search, book
+router.use(bookingRoute);
 
 //vehicle registration
 router.post("/vehicle/register", async (req, res) => {
