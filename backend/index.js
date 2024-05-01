@@ -23,6 +23,5 @@ cloudinary.config({
 console.log(cloudinary.config());
 
 app.use("/api/v1",routes);
-app.use("/api/v1",bookingRoute);
 
 dbConnect();
