@@ -36,7 +36,7 @@ userRouter.post("/signup", async (req, res) => {
         console.error('Error during signup:', err);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: 'Error in signup'
         });
     }
 })
@@ -72,10 +72,11 @@ userRouter.post("/signin", async (req, res) => {
         });
     }
     catch (err) {
-        console.error('Error during signin:', err);
+        // console.error('Error during signin:', err);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: 'Error in signin',
+            error : err
         });
     }
 })
