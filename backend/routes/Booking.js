@@ -4,6 +4,7 @@ const Vehicle = require("../models/Vehicle");
 const { error } = require("console");
 const router = express.Router();
 const auth = require("../middleware/auth");
+const Transactions = require("../models/Transactions");
 
 // Publish a new ride
 router.post("/publish", auth, async (req, res) => {
@@ -84,9 +85,10 @@ router.get("/search", auth, async (req, res) => {
 });
 
 // Book a ride
-router.post("/book", auth, async (req, res) => {
+router.post("/book/:id", auth, async (req, res) => {
   try {
-    const { rideId, seatsRequired } = req.body;
+    const { seatsRequired } = req.body;
+    const rideId = req.params.id;
     const riderId = req.user._id;
     const ride = await Published.findById(rideId);
     if (!ride) {
@@ -118,6 +120,9 @@ router.post("/book", auth, async (req, res) => {
       ride.rideBooked = true;
     }
     ride.riders.push(riderId)
+    const transaction = new Transactions({rideId, riderId, numberOfPassenger:seatsRequired, etherCost:ride.etherCost})
+    await transaction.save();
+    ride.transactionIds.push(transaction);
     await ride.save();
     res.status(200).json({
       success: true,
