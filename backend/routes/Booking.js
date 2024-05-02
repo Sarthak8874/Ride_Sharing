@@ -29,8 +29,7 @@ router.post("/publish", auth, async (req, res) => {
 // Get feasible rides as per the search criteria
 router.get("/search", auth, async (req, res) => {
   try {
-    const { sourceId, destinationId, date, seatsRequired } = req.body;
-
+    const { sourceId, destinationId, date, seatsRequired } = req.query;
     // Convert the seatsRequired to a number
     const seats = parseInt(seatsRequired);
     const userId = req.user._id;
