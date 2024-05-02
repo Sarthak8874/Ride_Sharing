@@ -25,12 +25,17 @@ const page = () => {
   const [sourcesuggestions, setsourceSuggestions] = React.useState<
     Prediction[]
   >([]);
+  const [destinationSuggestions, setDestinationSuggestions] = useState<
+    Prediction[]
+  >([]);
+
   const [passengers, setPassengers] = React.useState<string>();
   const [geoLocation, setGeoLocation] = React.useState<GeoLocation>({
     latitude: null,
     longitude: null,
   });
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
+  const destinationInputRef = React.useRef<HTMLInputElement>(null);
   useEffect(() => {
     const getLocation = () => {
       if (navigator.geolocation) {
@@ -50,6 +55,44 @@ const page = () => {
       }
     };
     getLocation();
+  }, []);
+
+  const handleDestinationSuggestion = (input: string) => {
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_DB_MAP_URL}?input=${input}&location=${geoLocation.latitude}-${geoLocation.longitude}&radius=5&country=in&key=${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}`
+      )
+      .then((res) => {
+        if (
+          res.data &&
+          res.data.predictions &&
+          res.data.predictions.length > 0
+        ) {
+          setDestinationSuggestions(res.data.predictions);
+        } else {
+          console.error("Invalid or unexpected response format");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching destination data:", error);
+      });
+  };
+
+  // Handle clicks outside the destination suggestion dropdown
+  const handleDestinationClickOutside = (event: any) => {
+    if (
+      destinationInputRef.current &&
+      !destinationInputRef.current.contains(event.target)
+    ) {
+      setDestinationSuggestions([]);
+    }
+  };
+
+  // Add event listener for handling clicks outside the destination suggestion dropdown
+  useEffect(() => {
+    document.addEventListener("click", handleDestinationClickOutside);
+    return () =>
+      document.removeEventListener("click", handleDestinationClickOutside);
   }, []);
 
   const Suggestion = (input: string, setSuggestions: any) => {
@@ -92,6 +135,7 @@ const page = () => {
     // Cleanup function on unmount
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
+  console.log(destinationSuggestions,'d');
   return (
     <>
       {/* <div className="flex h-full"> */}
@@ -129,9 +173,29 @@ const page = () => {
           </div>
           <Input
             value={destination}
-            onChange={(e) => setDestination(e?.target?.value)}
-            placeholder="to"
+            onChange={(e) => {
+              setDestination(e?.target?.value);
+              handleDestinationSuggestion(e?.target?.value);
+            }}
+            ref={destinationInputRef}
+            placeholder="To"
           />
+          <div className="absolute">
+            <ul>
+              {destinationSuggestions.map((place, index) => (
+                <li
+                  className=""
+                  key={index}
+                  onClick={() => {
+                    setDestination(place.description);
+                    setDestinationSuggestions([]);
+                  }}
+                >
+                  {place.description}
+                </li>
+              ))}
+            </ul>
+          </div>
           <DatePickerDemo />
           <Input
             type="number"
