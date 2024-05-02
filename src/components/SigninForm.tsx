@@ -4,12 +4,38 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/inputA";
 import { cn } from "@/utils/cn";
 import { BackgroundBeams } from "./ui/background-beams";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export function SigninForm() {
+  const [formData, setFormData] = React.useState({ email: "", password: "" });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+  };
+  const router = useRouter();
+  const backendUrl = process.env.NEXT_PUBLIC_URL;
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    axios.post(`${backendUrl}/user/signin`, {
+      emailOrUsername: formData.email,
+      password: formData.password,
+    }).then((res) => {
+      localStorage.setItem("token", res.data.token);
+      setFormData({ email: "", password: "" });
+      router.push("/publish");
+      toast.success("Logged in successfully", {
+        autoClose: 2000
+      });
+    }).catch((err) => {
+      toast.error(err.response.data.message, {
+        autoClose: 2000
+      });
+    });
   };
+  
+
   return (
     <div className="w-[350px] md:w-full mx-auto lg:w-full h-[100vh] flex justify-center items-center ">
       <div className="max-w-md z-[100] w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -23,11 +49,11 @@ export function SigninForm() {
         <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+            <Input id="email" onChange={handleChange} placeholder="projectmayhem@fc.com" type="email" required />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" placeholder="••••••••" type="password" />
+            <Input id="password" onChange={handleChange} placeholder="••••••••" type="password" required />
           </LabelInputContainer>
           
 
