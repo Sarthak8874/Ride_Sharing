@@ -1,0 +1,47 @@
+[
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_fromLocation",
+          "type": "string"
+        },
+        {
+          "name": "_toLocation",
+          "type": "string"
+        },
+        {
+          "name": "_timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "bookRide",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getRideDetails",
+      "outputs": [
+        {
+          "name": "fromLocation",
+          "type": "string"
+        },
+        {
+          "name": "toLocation",
+          "type": "string"
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+  
