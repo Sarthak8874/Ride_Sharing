@@ -2,7 +2,7 @@
 import { cn } from "@/utils/cn";
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/inputA";
-import { DatePickerDemo } from "./Datepicker";
+import { DatePickerDemo } from "../../components/Datepicker";
 import { Button } from "@/components/ui/button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,11 +15,18 @@ interface GeoLocation {
 }
 interface Prediction {
   description: string;
+  place_id: string;
 }
 
 const page = () => {
   const [source, setSource] = React.useState<string>("");
+  const [sourceId, setsourceId] = React.useState<string>("");
+  const [destinationId, setDestinationId] = React.useState<string>("");
+  const [date, setDate] = React.useState();
+  const [startTime, setstartTime] = React.useState();
+  const [endTime, setendTime] = React.useState();
   const [souceTime, setSouceTime] = useState(null);
+  const [vehicleId, setvehicleId] = React.useState("");
   const [destinationTime, setDestinantionTime] = useState(null);
   const [destination, setDestination] = React.useState<string>("");
   const [sourcesuggestions, setsourceSuggestions] = React.useState<
@@ -28,6 +35,7 @@ const page = () => {
   const [destinationSuggestions, setDestinationSuggestions] = useState<
     Prediction[]
   >([]);
+  const [etherCost, setetherCost] = React.useState<string>("");
 
   const [passengers, setPassengers] = React.useState<string>();
   const [geoLocation, setGeoLocation] = React.useState<GeoLocation>({
@@ -135,7 +143,36 @@ const page = () => {
     // Cleanup function on unmount
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-  console.log(destinationSuggestions,'d');
+
+  const handleOnPublish = () => {
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_URL}/publish`,
+        {
+          sourceId: sourceId,
+          destinationId: destinationId,
+          sourceName: source,
+          destinationName: destination,
+          vehicleId: "5f9e1b9e7b6d4b0017f9f0c4",
+          etherCost,
+          distance: 100,
+          date: date,
+          time: "10:10",
+          startTime:  "10:10",
+          endTime:  "10:10",
+          numberOfSeats: passengers,
+        },
+        {
+          headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}` },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
   return (
     <>
       {/* <div className="flex h-full"> */}
@@ -154,49 +191,61 @@ const page = () => {
               }}
               placeholder="From"
             />
-            <div className="absolute">
+            {sourcesuggestions.length > 0 && (
+              <div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
+                <ul className="divide-y divide-gray-200">
+                  {sourcesuggestions.map((place, index) => (
+                    <li
+                      className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
+                      key={index}
+                      onClick={() => {
+                        setSource(place.description);
+                        setsourceId(place.place_id);
+                        setsourceSuggestions([]);
+                      }}
+                    >
+                      {place.description}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <Input
+              value={destination}
+              onChange={(e) => {
+                setDestination(e?.target?.value);
+                handleDestinationSuggestion(e?.target?.value);
+              }}
+              ref={destinationInputRef}
+              placeholder="To"
+            />
+            <div className="absolute w-full">
               <ul>
-                {sourcesuggestions.map((place, index) => (
-                  <li
-                    className=""
-                    key={index}
-                    onClick={() => {
-                      setSource(place.description);
-                      setsourceSuggestions([]);
-                    }}
-                  >
-                    {place.description}
-                  </li>
-                ))}
+                {destinationSuggestions.length > 0 && (
+                  <div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
+                    <ul className="divide-y divide-gray-200">
+                      {destinationSuggestions.map((place, index) => (
+                        <li
+                          className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
+                          key={index}
+                          onClick={() => {
+                            setDestination(place.description);
+                            setDestinationId(place.place_id);
+                            setDestinationSuggestions([]);
+                          }}
+                        >
+                          {place.description}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </ul>
             </div>
           </div>
-          <Input
-            value={destination}
-            onChange={(e) => {
-              setDestination(e?.target?.value);
-              handleDestinationSuggestion(e?.target?.value);
-            }}
-            ref={destinationInputRef}
-            placeholder="To"
-          />
-          <div className="absolute">
-            <ul>
-              {destinationSuggestions.map((place, index) => (
-                <li
-                  className=""
-                  key={index}
-                  onClick={() => {
-                    setDestination(place.description);
-                    setDestinationSuggestions([]);
-                  }}
-                >
-                  {place.description}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <DatePickerDemo />
+          <DatePickerDemo setDate2={setDate} />
           <Input
             type="number"
             value={passengers}
@@ -241,7 +290,26 @@ const page = () => {
             dateFormat="h:mm aa"
             timeCaption="Time"
           />
-          <Button variant="outline">Publish</Button>
+          <Input
+            type="text"
+            value={vehicleId}
+            onChange={(e) => setvehicleId(e?.target?.value)}
+            placeholder="Enter Vechicle Id"
+          />
+          <Input
+            type="number"
+            value={etherCost}
+            onChange={(e) => setetherCost(e?.target?.value)}
+            placeholder="Enter Cost per Passengers"
+          />
+          <Button
+            onClick={() => {
+              handleOnPublish();
+            }}
+            variant="outline"
+          >
+            Publish
+          </Button>
         </div>
       </div>
     </>
