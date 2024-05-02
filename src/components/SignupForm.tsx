@@ -5,13 +5,89 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/inputA";
 import { cn } from "@/utils/cn";
 import { BackgroundBeams } from "@/components/ui/background-beams";
-
+import { useState, ChangeEvent } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export function SignupForm() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    username: "",
+    phoneNumber: "",
+  });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted");
+    console.log(JSON.stringify(formData));
+    try {
+      // const res = await axios.post(process.env.NEXT_PUBLIC_URL+"/user/signup",JSON.stringify(formData))
+      // .then(res => console.log(res))
+      // .catch(e=>{console.log(e)})
+      if (formData.password !== formData.confirmPassword) {
+        alert("password doesn't match");
+        return;
+      }
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_URL + "/user/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          localStorage.setItem("token", data.token);
+          setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            username: "",
+            phoneNumber: "",
+          });
+          router.push("/publish");
+        });
+      // console.log(response);
+      // if (response.ok) {
+      //   console.log("Form submitted successfully");
+      //   // Reset form after successful submission if needed
+
+      //   setFormData({
+      //     firstName: "",
+      //     lastName: "",
+      //     email: "",
+      //     password: "",
+      //     confirmPassword: "",
+      //     username: "",
+      //     phoneNumber: "",
+      //   });
+      // } else {
+      //   console.error("Failed to submit form");
+      // }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
+
   return (
     <div className="sm:h-auto   w-full md:h-[100vh] flex justify-center items-center ">
       <div className="max-w-md z-[100] w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -27,27 +103,80 @@ export function SignupForm() {
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
             <LabelInputContainer>
               <Label htmlFor="firstname">First name</Label>
-              <Input id="firstname" placeholder="Tyler" type="text" />
+              <Input
+                id="firstname"
+                name="firstName"
+                placeholder="Tyler"
+                type="text"
+                value={formData.firstName}
+                onChange={handleChange}
+              />
             </LabelInputContainer>
             <LabelInputContainer>
               <Label htmlFor="lastname">Last name</Label>
-              <Input id="lastname" placeholder="Durden" type="text" />
+              <Input
+                id="lastname"
+                name="lastName"
+                placeholder="Durden"
+                type="text"
+                value={formData.lastName}
+                onChange={handleChange}
+              />
             </LabelInputContainer>
           </div>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+            <Input
+              id="email"
+              name="email"
+              placeholder="projectmayhem@fc.com"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" placeholder="••••••••" type="password" />
+            <Input
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-8">
             <Label htmlFor="twitterpassword">Confirm password</Label>
             <Input
               id="twitterpassword"
+              name="confirmPassword"
               placeholder="••••••••"
-              type="twitterpassword"
+              type="password"
+              onChange={handleChange}
+              value={formData.confirmPassword}
+            />
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              name="username"
+              placeholder="sample_123"
+              type="text"
+              value={formData.username}
+              onChange={handleChange}
+            />
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="phoneNumber">Phone Number</Label>
+            <Input
+              id="phoneNumber"
+              name="phoneNumber"
+              placeholder="+91-740XX-XXXXX"
+              type="number"
+              value={formData.phoneNumber}
+              onChange={handleChange}
             />
           </LabelInputContainer>
 
@@ -61,11 +190,10 @@ export function SignupForm() {
           <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
         </form>
       </div>
-      <BackgroundBeams/>
+      <BackgroundBeams />
     </div>
   );
 }
-
 
 const LabelInputContainer = ({
   children,
