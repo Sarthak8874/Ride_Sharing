@@ -3,15 +3,26 @@
  * @see https://v0.dev/t/xYHqD5MkVkT
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
+"use client";
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
+  const handleButtonClick = (text:string) => {
+    router.push(`/${text}`);
+  }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+  }
+  const isToken = localStorage.getItem("token");
+  console.log(isToken)
   return (
     <nav className="inset-x-0 top-0 z-50 bg-white shadow-sm dark:bg-gray-950/90">
       <div className="w-full max-w-7xl mx-auto px-4">
         <div className="flex justify-between h-14 items-center">
-          <Link className="flex items-center" href="#">
+          <Link className="flex items-center" href="/">
             <MountainIcon  />
             <span className="sr-only">Acme Inc</span>
           </Link>
@@ -30,10 +41,14 @@ export default function Navbar() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Button >
+            {isToken && <Button onClick={()=>handleLogout()}>Sign Out</Button>}
+            {!isToken &&<>
+              <Button onClick={()=>handleButtonClick('signin')} >
               Sign in
             </Button>
-            <Button >Sign up</Button>
+            <Button onClick={()=>handleButtonClick('signup')}>Sign up</Button>
+            </>
+            }
           </div>
         </div>
       </div>
