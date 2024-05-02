@@ -80,4 +80,36 @@ userRouter.post("/signin", async (req, res) => {
     }
 })
 
+//edit profile details 
+userRouter.put("/:id", async (req, res) => {
+    try {
+       const username=req.params.id;
+
+        const user = await User.findOneAndUpdate(
+            { username: username }, 
+            { $set: req.body }, 
+            { new: true }
+        );
+
+
+       if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: "User Not Found"
+        });
+       }
+   
+       return res.status(200).json({
+        success: true,
+        message: "Vehicle Registration Done",
+        new: user,
+    });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to update user details"
+        });
+    }
+   });
+
 module.exports = userRouter;
