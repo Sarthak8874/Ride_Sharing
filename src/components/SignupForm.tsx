@@ -8,6 +8,8 @@ import { BackgroundBeams } from "@/components/ui/background-beams";
 import { useState, ChangeEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
 
 export function SignupForm() {
   const router = useRouter();
@@ -34,11 +36,11 @@ export function SignupForm() {
     console.log("Form submitted");
     console.log(JSON.stringify(formData));
     try {
-      // const res = await axios.post(process.env.NEXT_PUBLIC_URL+"/user/signup",JSON.stringify(formData))
-      // .then(res => console.log(res))
-      // .catch(e=>{console.log(e)})
       if (formData.password !== formData.confirmPassword) {
         alert("password doesn't match");
+        // toast.error("password dosen't match", {
+        //   autoClose: 2000
+        // });
         return;
       }
       const response = await fetch(
@@ -65,26 +67,15 @@ export function SignupForm() {
             phoneNumber: "",
           });
           router.push("/publish");
+          // toast.success("Logged in successfully", {
+          //   autoClose: 2000
+          // });
         });
-      // console.log(response);
-      // if (response.ok) {
-      //   console.log("Form submitted successfully");
-      //   // Reset form after successful submission if needed
-
-      //   setFormData({
-      //     firstName: "",
-      //     lastName: "",
-      //     email: "",
-      //     password: "",
-      //     confirmPassword: "",
-      //     username: "",
-      //     phoneNumber: "",
-      //   });
-      // } else {
-      //   console.error("Failed to submit form");
-      // }
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch (err) {
+      console.error("Error submitting form:", err);
+      // toast.error("sign up error", {
+      //   autoClose: 2000
+      // });
     }
   };
 
