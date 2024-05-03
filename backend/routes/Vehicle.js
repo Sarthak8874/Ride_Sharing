@@ -1,6 +1,7 @@
 const express = require("express");
 const VehiRouter = express.Router();
 const Vehicle = require("../models/Vehicle");
+const User = require("../models/User");
 
 const cloudinary = require("cloudinary").v2;
 
@@ -47,7 +48,7 @@ VehiRouter.post("/register", async (req, res) => {
 
         // Update user model with the ID of the created vehicle
         try {
-            await User.findOneAndUpdate(
+            const u =await User.findOneAndUpdate(
                 { username: username },
                 { $push: { vehicleIds: veh._id } },
                 { new: true }
@@ -76,4 +77,22 @@ VehiRouter.post("/register", async (req, res) => {
     }
 });
 
+//all vehicles for particular user
+VehiRouter.get("/all/:username", async (req, res) => {
+    try {
+        const username  = req.params.username;
+        const vehicles = await Vehicle.find({ ownerUsername: username, approvedStatus: 'Approved' });
+        return res.status(200).json({
+            success: true,
+            message: "All Vehicles",
+            data: vehicles,
+        });
+    } catch (e) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to get vehicles",
+            error: e,
+        });
+    }
+});
 module.exports = VehiRouter;

@@ -24,11 +24,22 @@ userRouter.post("/signup", async (req, res) => {
             phoneNumber,
             username,
         });
-        const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '6h' });
+
+        const userData = {
+            userId: newUser._id, 
+            firstName: newUser.firstName,
+            lastName: newUser.lastName,
+            email: newUser.email,
+            username: newUser.username 
+        };
+
+
+        const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '6h' });
         res.status(200).json({
             success: true,
             message: "User Signed up Successfully",
-            token : token
+            token : token,
+            userData
         })
 
     }
@@ -64,11 +75,21 @@ userRouter.post("/signin", async (req, res) => {
             });
         }
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '6h' });
+        const userData = {
+            userId: user._id, 
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username 
+        };
+
+        const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '6h' });
         return res.status(200).json({
             success: true,
             message: "User Login successfull",
-            token: token
+            token: token,
+            userData
+            
         });
     }
     catch (err) {

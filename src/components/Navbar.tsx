@@ -14,10 +14,18 @@ export default function Navbar() {
     router.push(`/${text}`);
   }
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+   }
   }
-  const isToken = localStorage.getItem("token");
-  console.log(isToken)
+
+  let isToken = null;
+  if (typeof localStorage !== 'undefined') {
+     isToken = localStorage.getItem("token");
+  }
+  console.log(isToken);
+
   return (
     <nav className="inset-x-0 top-0 z-50 bg-white shadow-sm dark:bg-gray-950/90">
       <div className="w-full max-w-7xl mx-auto px-4">

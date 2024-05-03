@@ -23,6 +23,7 @@ export function SigninForm() {
       password: formData.password,
     }).then((res) => {
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userData", JSON.stringify(res.data.userData) );
       setFormData({ email: "", password: "" });
       router.push("/publish");
       toast.success("Logged in successfully", {
