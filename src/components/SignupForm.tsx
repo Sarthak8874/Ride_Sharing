@@ -9,7 +9,7 @@ import { useState, ChangeEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-
+import 'react-toastify/dist/ReactToastify.css';
 
 export function SignupForm() {
   const router = useRouter();
@@ -37,10 +37,8 @@ export function SignupForm() {
     console.log(JSON.stringify(formData));
     try {
       if (formData.password !== formData.confirmPassword) {
-        alert("password doesn't match");
-        // toast.error("password dosen't match", {
-        //   autoClose: 2000
-        // });
+        // alert("password doesn't match");
+        toast.error("Password Dosen't Match");
         return;
       }
       const response = await fetch(
@@ -67,15 +65,11 @@ export function SignupForm() {
             phoneNumber: "",
           });
           router.push("/publish");
-          // toast.success("Logged in successfully", {
-          //   autoClose: 2000
-          // });
+          toast.success("Sign up Done!!")
         });
     } catch (err) {
       console.error("Error submitting form:", err);
-      // toast.error("sign up error", {
-      //   autoClose: 2000
-      // });
+      toast.error("Error in signup");
     }
   };
 
