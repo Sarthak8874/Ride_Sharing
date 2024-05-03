@@ -75,7 +75,7 @@ const page = () => {
         console.error("Geolocation is not supported by this browser.");
       }
     };
-    // getLocation();
+    getLocation();
 
     const getAllVehicles = () => {
        axios
