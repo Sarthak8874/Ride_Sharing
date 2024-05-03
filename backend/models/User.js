@@ -23,11 +23,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    walletAddress: {
-        type: String,
-        // required: true,
-        unique: true
-    },
+    // walletAddress: {
+    //     type: String,
+    //     // required: true,
+    //     // unique: true
+    // },
     phoneNumber: {
         type: String,
         required: true,

@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 
 userRouter.post("/signup", async (req, res) => {
     try {
-        const { firstName, lastName, email, password, walletAddress, phoneNumber, username } = req.body;
+        const { firstName, lastName, email, password,  phoneNumber, username } = req.body;
 
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
@@ -21,14 +21,14 @@ userRouter.post("/signup", async (req, res) => {
             lastName,
             email,
             password: hashedPassword,
-            walletAddress,
             phoneNumber,
             username,
         });
-
+        const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '6h' });
         res.status(200).json({
             success: true,
-            message: "User Signed up Successfully"
+            message: "User Signed up Successfully",
+            token : token
         })
 
     }
@@ -36,7 +36,7 @@ userRouter.post("/signup", async (req, res) => {
         console.error('Error during signup:', err);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: 'Error in signup'
         });
     }
 })
@@ -72,10 +72,11 @@ userRouter.post("/signin", async (req, res) => {
         });
     }
     catch (err) {
-        console.error('Error during signin:', err);
+        // console.error('Error during signin:', err);
         res.status(500).json({
             success: false,
-            message: 'Internal server error'
+            message: 'Error in signin',
+            error : err
         });
     }
 })
