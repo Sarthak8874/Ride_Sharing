@@ -7,24 +7,31 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import { UserContext } from "@/utils/UserProvider";
 
 export default function Navbar() {
+  const {token, updateToken} = React.useContext(UserContext);
   const router = useRouter();
   const handleButtonClick = (text:string) => {
     router.push(`/${text}`);
   }
+  useEffect(() => {
+    if (typeof localStorage !== 'undefined') {
+      const token = localStorage.getItem("token");
+      if (token) {
+        updateToken(token);
+      }
+    }
+  }, [token])
   const handleLogout = () => {
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem("token");
       localStorage.removeItem("userData");
+      updateToken("");
+      router.push('/');
    }
   }
-
-  let isToken = null;
-  if (typeof localStorage !== 'undefined') {
-     isToken = localStorage.getItem("token");
-  }
-  console.log(isToken);
 
   return (
     <nav className="inset-x-0 top-0 z-50 bg-white shadow-sm dark:bg-gray-950/90">
@@ -49,8 +56,8 @@ export default function Navbar() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            {isToken && <Button onClick={()=>handleLogout()}>Sign Out</Button>}
-            {!isToken &&<>
+            {token!=="" && <Button onClick={()=>handleLogout()}>Sign Out</Button>}
+            {token==="" &&<>
               <Button onClick={()=>handleButtonClick('signin')} >
               Sign in
             </Button>
