@@ -8,9 +8,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { UserContext } from "@/utils/UserProvider";
 
 export function SigninForm() {
   const [formData, setFormData] = React.useState({ email: "", password: "" });
+  const {updateToken} = React.useContext(UserContext);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
@@ -24,6 +26,7 @@ export function SigninForm() {
     }).then((res) => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userData", JSON.stringify(res.data.userData) );
+      updateToken(res.data.token);
       setFormData({ email: "", password: "" });
       router.push("/publish");
       toast.success("Logged in successfully", {

@@ -137,4 +137,39 @@ router.post("/book/:id", auth, async (req, res) => {
   }
 });
 
+// Get a ride by id
+router.get("/book/:id", auth, async (req, res) => {
+  try {
+    const rideId = req.params.id;
+    const ride = await Published.findById(rideId).populate('driverId').populate('vehicleId');
+    if (ride === null) {
+      return res.status(404).json({
+        success: false,
+        message: "Ride not found",
+      });
+    }
+    const { driverId, vehicleId, ...rideWithoutIds } = ride.toObject();
+    const driverDetails = {
+      firstName: ride.driverId.firstName,
+      lastName: ride.driverId.lastName,
+    };
+    const vehicleDetails = {
+      // vehicleNumber: ride.vehicleId.vehicleNumber,
+    };
+    const data = { ...rideWithoutIds, driver: driverDetails, vehicle: vehicleDetails };
+
+    res.status(200).json({
+      success: true,
+      message: "Ride found",
+      data,
+    });
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 module.exports = router;
