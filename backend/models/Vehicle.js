@@ -18,6 +18,11 @@ const vehicleSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
+    vehicleModel: {
+        type: String,
+        required: false
+    },
     // ownerId: {
     //     type: Schema.Types.ObjectId,
     //     ref: 'User',
