@@ -14,6 +14,7 @@ VehiRouter.post("/register", async (req, res) => {
             vehicleNumber,
             vehicleImg,
             idProof,
+            vehicleModel,
             vehicleRc,
             approvedStatus,
         } = req.body;
@@ -42,6 +43,7 @@ VehiRouter.post("/register", async (req, res) => {
             vehicleNumber,
             vehicleImage,
             ownerIdProof,
+            vehicleModel,
             approvedStatus,
             vehicleRC,
         });
@@ -77,11 +79,29 @@ VehiRouter.post("/register", async (req, res) => {
     }
 });
 
-//all vehicles for particular user
+//all vehicles for particular user (approved ones only)
 VehiRouter.get("/all/:username", async (req, res) => {
     try {
         const username  = req.params.username;
         const vehicles = await Vehicle.find({ ownerUsername: username, approvedStatus: 'Approved' });
+        return res.status(200).json({
+            success: true,
+            message: "All Vehicles for that user",
+            data: vehicles,
+        });
+    } catch (e) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to get vehicles",
+            error: e,
+        });
+    }
+});
+
+//all vehicles for verification
+VehiRouter.get("/all", async (req, res) => {
+    try {
+        const vehicles = await Vehicle.find({});
         return res.status(200).json({
             success: true,
             message: "All Vehicles",
