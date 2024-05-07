@@ -48,13 +48,17 @@ import React from "react";
 import { EditProfile } from "./EditProfile";
 
 interface ProfileProps {
-  name: string;
-  mobileNumber: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber:string,
+  email:string,
 }
 
 const Profile: React.FC<ProfileProps> = ({
-  name,
-  mobileNumber,
+  firstName,
+  lastName,
+  phoneNumber,
+  email
 }) => {
   return (
     <div className="flex items-center justify-center h-[600px] ">
@@ -71,10 +75,13 @@ const Profile: React.FC<ProfileProps> = ({
         </div>
         <div className="flex flex-col space-y-4">
           <div>
-            <span className="font-semibold">Name:</span> {name}
+            <span className="font-semibold">Name:</span> {firstName} {lastName}
           </div>
           <div>
-            <span className="font-semibold">Mobile Number:</span> {mobileNumber}
+            <span className="font-semibold">Mobile Number:</span> {phoneNumber}
+          </div>
+          <div>
+            <span className="font-semibold">Email:</span> {email}
           </div>
           {/* <div>
             <span className="font-semibold">Password:</span> {password}
