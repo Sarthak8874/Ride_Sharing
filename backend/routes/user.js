@@ -126,7 +126,7 @@ userRouter.put("/:id", async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Vehicle Registration Done",
-      new: user,
+      data: user,
     });
   } catch (err) {
     return res.status(500).json({

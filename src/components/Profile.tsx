@@ -52,13 +52,15 @@ interface ProfileProps {
   lastName: string;
   phoneNumber:string,
   email:string,
+  username:string
 }
 
 const Profile: React.FC<ProfileProps> = ({
   firstName,
   lastName,
   phoneNumber,
-  email
+  email,
+  username
 }) => {
   return (
     <div className="flex items-center justify-center h-[600px] ">
@@ -78,6 +80,9 @@ const Profile: React.FC<ProfileProps> = ({
             <span className="font-semibold">Name:</span> {firstName} {lastName}
           </div>
           <div>
+            <span className="font-semibold">UserName:</span> {username}
+          </div>
+          <div>
             <span className="font-semibold">Mobile Number:</span> {phoneNumber}
           </div>
           <div>
@@ -87,7 +92,7 @@ const Profile: React.FC<ProfileProps> = ({
             <span className="font-semibold">Password:</span> {password}
           </div> */}
         </div>
-        <EditProfile/>
+        <EditProfile username={username} />
       </div>
     </div>
   );
