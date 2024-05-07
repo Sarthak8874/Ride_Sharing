@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { use, useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -10,9 +10,13 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 
+
+import React, { useEffect } from "react";
 import RequestTables from "@/components/RequestTables";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+import { UserContext } from "@/utils/UserProvider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const data = [
@@ -50,15 +54,20 @@ const data = [
 
 const AdminPortal: React.FC = () => {
 	const [requests, setRequests] = useState(data);
+	const {vehicles, setVehicles,fetchVehicles} =React.useContext(UserContext);
+
+	
+
+	console.log("admin",vehicles);
 
 	return (
-		<Tabs defaultValue="pending" className="w-full p-10">
+		<Tabs defaultValue="Pending" className="w-full p-10">
 			<TabsList className="grid w-full grid-cols-3" >
-				<TabsTrigger value="pending">Pending</TabsTrigger>
-				<TabsTrigger value="approved">Approved</TabsTrigger>
-				<TabsTrigger value="rejected">Rejected</TabsTrigger>
+				<TabsTrigger value="Pending">Pending</TabsTrigger>
+				<TabsTrigger value="Approved">Approved</TabsTrigger>
+				<TabsTrigger value="Rejected">Rejected</TabsTrigger>
 			</TabsList>
-			<TabsContent value="pending">
+			<TabsContent value="Pending">
 				<Card className="px-10 py-4">
 					<CardHeader>
 						<CardTitle>All Requests</CardTitle>
@@ -68,13 +77,13 @@ const AdminPortal: React.FC = () => {
 					</CardHeader>
 
 					<RequestTables
-						val={"pending"}
-						req={requests}
-						setReq={setRequests}
+						val={"Pending"}
+						// req={vehicles}
+						// setReq={setRequests}
 					/>
 				</Card>
 			</TabsContent>
-			<TabsContent value="approved">
+			<TabsContent value="Approved">
 				<Card className="px-10 py-4">
 					<CardHeader>
 						<CardTitle>Approved Requests</CardTitle>
@@ -84,13 +93,13 @@ const AdminPortal: React.FC = () => {
 					</CardHeader>
 
 					<RequestTables
-						val={"approved"}
-						req={requests}
-						setReq={setRequests}
+						val={"Approved"}
+						// req={vehicles}
+						// setReq={setRequests}
 					/>
 				</Card>
 			</TabsContent>
-			<TabsContent value="rejected">
+			<TabsContent value="Rejected">
 				<Card className="px-10 py-4">
 					<CardHeader>
 						<CardTitle>Rejected Requests</CardTitle>
@@ -100,9 +109,9 @@ const AdminPortal: React.FC = () => {
 					</CardHeader>
 
 					<RequestTables
-						val={"rejected"}
-						req={requests}
-						setReq={setRequests}
+						val={"Rejected"}
+						// req={vehicles}
+						// setReq={setRequests}
 					/>
 				</Card>
 			</TabsContent>
