@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { UserContext } from "@/utils/UserProvider";
+import {toast} from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
+
+
+
 
 export default function Navbar() {
   const {token, updateToken} = React.useContext(UserContext);
@@ -28,7 +33,9 @@ export default function Navbar() {
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem("token");
       localStorage.removeItem("userData");
+      toast.success("Logged Out successfully!!");
       updateToken("");
+
       router.push('/');
    }
   }

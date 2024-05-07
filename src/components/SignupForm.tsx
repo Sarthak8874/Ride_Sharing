@@ -11,9 +11,11 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Spinner from "./Spinner";
+import { UserContext } from "@/utils/UserProvider";
 
 
 export function SignupForm() {
+  const {updateToken} = React.useContext(UserContext);
   const router = useRouter();
   const [loader, setLoader] = useState(false);
   const [formData, setFormData] = useState({
@@ -59,6 +61,7 @@ export function SignupForm() {
         .then((data) => {
           console.log(data);
           localStorage.setItem("token", data.token);
+          updateToken(data.token);
           setFormData({
             firstName: "",
             lastName: "",
