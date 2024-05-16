@@ -12,7 +12,7 @@ interface UserContextType {
   duration: string;
   setDistance: (distance: string) => void;
   setDuration: (duration: string) => void;
-  setDirectionsResponse: (directionsResponse: google.maps.DirectionsResult) => void;
+  setDirectionsResponse: (directionsResponse: google.maps.DirectionsResult | null) => void;
   setdestiLongiLat: (geoLocation: GeoLocation) => void;
   setlongiLat: (geoLocation: GeoLocation) => void;
   setVehicles: (vehicles: any) => void;

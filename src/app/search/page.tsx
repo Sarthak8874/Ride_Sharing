@@ -37,7 +37,7 @@ const page = () => {
     longitude: null,
   });
 
-  const { setlongiLat, setDirectionsResponse,distance,duration, setDistance, setDuration, setdestiLongiLat } = React.useContext(UserContext);
+  const { longiLat, destiLongiLat, setlongiLat, setDirectionsResponse,distance,duration, setDistance, setDuration, setdestiLongiLat } = React.useContext(UserContext);
 
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
@@ -137,6 +137,22 @@ const page = () => {
     if (results.routes && results.routes.length > 0 && results.routes[0].legs && results.routes[0].legs.length > 0) {
       setDistance(results.routes[0].legs[0].distance?.text || '');
       setDuration(results.routes[0].legs[0].duration?.text || '');
+    }
+  }
+
+  function clearRoute() {
+    setDirectionsResponse(null);
+    setDistance('');
+    setDuration('');
+    setSource('');
+    setDestination('');
+    setlongiLat({ latitude: null, longitude: null, label: '' });
+    setdestiLongiLat({ latitude: null, longitude: null, label: '' });
+    if (sourceInputRef.current) {
+     sourceInputRef.current.value = '';
+    }
+    if (destinationInputRef.current) {
+     destinationInputRef.current.value = '';
     }
   }
 
@@ -249,6 +265,8 @@ const page = () => {
             onChange={(e) => {
               setSource(e?.target?.value);
               handleSourceSuggestion(e?.target?.value);
+              setlongiLat({ latitude: null, longitude: null, label: '' });
+              setDirectionsResponse(null);
             }}
             placeholder="From"
           />
@@ -278,6 +296,8 @@ const page = () => {
             onChange={(e) => {
               setDestination(e?.target?.value);
               handleDestinationSuggestion(e?.target?.value);
+              setdestiLongiLat({ latitude: null, longitude: null, label: '' });
+              setDirectionsResponse(null);
             }}
             ref={destinationInputRef}
             placeholder="To"
@@ -329,6 +349,15 @@ const page = () => {
           variant="outline"
         >
           Calculate Route
+        </Button>
+
+        <Button
+          onClick={() => {
+            clearRoute();
+          }}
+          variant="outline"
+        >
+          Clear
         </Button>
       </div>
       <div className="flex bg-[#11184b] text-white justify-center items-center">
