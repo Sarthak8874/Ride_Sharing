@@ -122,7 +122,7 @@ const MapComponent: React.FC<MyComponentProps> = () => {
         onLoad={onLoad}
         onUnmount={onUnmount}
         >
-            <Marker position={{ lat: longiLat.latitude!, lng: longiLat.longitude! }} />
+            {longiLat && <Marker position={{ lat: longiLat.latitude!, lng: longiLat.longitude! }} />}
             {destiLongiLat && <Marker position={{ lat: destiLongiLat.latitude!, lng: destiLongiLat.longitude! }} />}
             {directionsResponse && (
               <DirectionsRenderer directions={directionsResponse} />
