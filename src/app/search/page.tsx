@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import { Input } from "@/components/ui/inputA";
 import { DatePickerDemo } from "../../components/Datepicker";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
+import axios from "axios"; 
 
 import BookComponent from "./BookComponent";
+import { UserContext } from "@/utils/UserProvider";
+import MapComponent from "@/components/MapComponent";
+
 interface GeoLocation {
   latitude: number | null;
   longitude: number | null;
@@ -33,6 +36,9 @@ const page = () => {
     latitude: null,
     longitude: null,
   });
+
+  const { longiLat, setlongiLat } = React.useContext(UserContext);
+  console.log(longiLat);
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -55,6 +61,40 @@ const page = () => {
     };
     getLocation();
   }, []);
+
+  useEffect(() => {
+    const getlongiLat = (input: string) => {
+      axios
+        .get(
+          `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${input}&key=${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}`
+        )
+        .then((res) => {
+          if (
+            res?.data
+          ) {
+            setlongiLat({
+              latitude: res.data.result.geometry.location.lat,
+              longitude: res.data.result.geometry.location.lng,
+              label: res.data.result.name,
+            })
+          } else {
+            console.error("Invalid or unexpected response format");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching destination data:", error);
+        });
+    };
+
+    // if (destinationId) {
+    //   getlongiLat(destinationId);
+    // }
+    if (sourceId) {
+      getlongiLat(sourceId);
+    }
+    
+    
+  },[sourceId, destinationId]);
 
   const handleDestinationSuggestion = (input: string) => {
     axios
@@ -239,6 +279,8 @@ const page = () => {
         </Button>
       </div>
       <BookComponent />
+      <MapComponent/>
+      <div className="mt-10">END</div>
       {/* <Map /> */}
       {/* </div> */}
     </>
