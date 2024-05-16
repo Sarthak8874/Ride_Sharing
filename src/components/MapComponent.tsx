@@ -72,7 +72,7 @@
 // export default React.memo(MapComponent);
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-google-maps/api';
 import { UserContext } from '@/utils/UserProvider';
 
 // Define the styles for the map container
@@ -84,7 +84,7 @@ const containerStyle = {
 interface MyComponentProps {}
 
 const MapComponent: React.FC<MyComponentProps> = () => {
-  const { longiLat, destiLongiLat } = React.useContext(UserContext);
+  const { longiLat, destiLongiLat,directionsResponse } = React.useContext(UserContext);
   const [center, setCenter] = useState({ lat: -3.745, lng: -38.523 });
 
   const { isLoaded } = useJsApiLoader({
@@ -114,16 +114,22 @@ const MapComponent: React.FC<MyComponentProps> = () => {
   }, [map, longiLat, destiLongiLat]);
 
   return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={10}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-    >
-      <MarkerF position={{ lat: longiLat.latitude!, lng: longiLat.longitude! }} />
-      {destiLongiLat && <MarkerF position={{ lat: destiLongiLat.latitude!, lng: destiLongiLat.longitude! }} />}
-    </GoogleMap>
+    <div>
+        <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={10}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        >
+            <Marker position={{ lat: longiLat.latitude!, lng: longiLat.longitude! }} />
+            {destiLongiLat && <Marker position={{ lat: destiLongiLat.latitude!, lng: destiLongiLat.longitude! }} />}
+            {directionsResponse && (
+              <DirectionsRenderer directions={directionsResponse} />
+            )}
+        </GoogleMap>
+    </div>
+    
   ) : <></>;
 };
 

@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 // Define the type for the context value
@@ -7,6 +7,12 @@ interface UserContextType {
   vehicles: any;
   longiLat: GeoLocation;
   destiLongiLat:GeoLocation;
+  directionsResponse: google.maps.DirectionsResult | null;
+  distance: string;
+  duration: string;
+  setDistance: (distance: string) => void;
+  setDuration: (duration: string) => void;
+  setDirectionsResponse: (directionsResponse: google.maps.DirectionsResult) => void;
   setdestiLongiLat: (geoLocation: GeoLocation) => void;
   setlongiLat: (geoLocation: GeoLocation) => void;
   setVehicles: (vehicles: any) => void;
@@ -25,6 +31,12 @@ export const UserContext = createContext<UserContextType>({
   token: "",
   longiLat: { latitude: null, longitude: null, label: ""},
   destiLongiLat: { latitude: null, longitude: null, label: ""},
+  directionsResponse: null,
+  distance: '',
+  duration: '',
+  setDistance: () => {},
+  setDuration: () => {},
+  setDirectionsResponse: () => {},
   setdestiLongiLat: () => {},
   setlongiLat: () => {},
   vehicles: [],
@@ -104,6 +116,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     label:"",
   });
 
+  //route calculation
+
+  const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
+  const [distance, setDistance] = useState<string>('');
+  const [duration, setDuration] = useState<string>('');
+
+
 
   async function fetchVehicles() {
     try {
@@ -129,7 +148,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   // Provide the token and updateToken function to the context
   return (
-    <UserContext.Provider value={{ token, updateToken, vehicles, setVehicles, fetchVehicles,longiLat, setlongiLat, destiLongiLat, setdestiLongiLat }}>
+    <UserContext.Provider value={{ token, updateToken, vehicles, setVehicles, fetchVehicles,longiLat, setlongiLat, destiLongiLat, setdestiLongiLat, 
+      directionsResponse, distance, duration, setDistance,setDuration, setDirectionsResponse}}
+    >
       {children}
     </UserContext.Provider>
   );

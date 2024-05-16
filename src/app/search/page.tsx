@@ -37,10 +37,7 @@ const page = () => {
     longitude: null,
   });
 
-  const { longiLat, setlongiLat } = React.useContext(UserContext);
-  console.log(longiLat);
-
-  const { destiLongiLat, setdestiLongiLat } = React.useContext(UserContext);
+  const { setlongiLat, setDirectionsResponse,distance,duration, setDistance, setDuration, setdestiLongiLat } = React.useContext(UserContext);
 
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
@@ -122,6 +119,26 @@ const page = () => {
     
     
   },[sourceId, destinationId]);
+
+  async function calculateRoute() {
+    if (!sourceInputRef.current || !destinationInputRef.current || sourceInputRef.current.value === '' || destinationInputRef.current.value === '') {
+      return;
+    }
+    
+    const directionsService = new google.maps.DirectionsService();
+    
+    const results = await directionsService.route({
+      origin: sourceInputRef.current.value,
+      destination: destinationInputRef.current.value,
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+
+    setDirectionsResponse(results);
+    if (results.routes && results.routes.length > 0 && results.routes[0].legs && results.routes[0].legs.length > 0) {
+      setDistance(results.routes[0].legs[0].distance?.text || '');
+      setDuration(results.routes[0].legs[0].duration?.text || '');
+    }
+  }
 
   const handleDestinationSuggestion = (input: string) => {
     axios
@@ -304,6 +321,22 @@ const page = () => {
         >
           Search
         </Button>
+
+        <Button
+          onClick={() => {
+            calculateRoute();
+          }}
+          variant="outline"
+        >
+          Calculate Route
+        </Button>
+      </div>
+      <div className="flex bg-[#11184b] text-white justify-center items-center">
+        <div className="w-full flex justify-evenly">
+          <h1 className="text-xl">Distance: <span className="underline text-2xl font-semibold">{distance}</span></h1>
+          <h1 className="text-xl">Duration: <span className="underline text-2xl font-semibold">{duration}</span></h1>
+        </div>
+        
       </div>
       <BookComponent />
       <MapComponent/>
