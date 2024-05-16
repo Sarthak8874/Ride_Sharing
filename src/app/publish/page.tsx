@@ -38,7 +38,7 @@ const page = () => {
   >([]);
   const [etherCost, setetherCost] = React.useState<string>("");
   const [allVehicles, setAllVehicles] = useState(null);
-
+  const [distance, setDistance] = useState("");
   const [passengers, setPassengers] = React.useState<string>();
   const [geoLocation, setGeoLocation] = React.useState<GeoLocation>({
     latitude: null,
@@ -49,13 +49,12 @@ const page = () => {
 
   const userDataString = localStorage.getItem("userData");
   let username = "";
-    if (userDataString !== null) {
-        const userData = JSON.parse(userDataString);
-         username = userData.username; 
-    } else {
-      console.error("User data not found in localStorage");
-    }
-    
+  if (userDataString !== null) {
+    const userData = JSON.parse(userDataString);
+    username = userData.username;
+  } else {
+    console.error("User data not found in localStorage");
+  }
 
   useEffect(() => {
     const getLocation = () => {
@@ -78,19 +77,18 @@ const page = () => {
     getLocation();
 
     const getAllVehicles = () => {
-       axios
-           .get(`${process.env.NEXT_PUBLIC_URL}/vehicle/all/${username}`, {
-               headers: {
-                   Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
-               },
-           })
-           .then((res) => {
-               if (res.data.data) {
-                   setAllVehicles(res.data.data);
-               }
-           })
-           .catch((e) => console.log(e));
-      
+      axios
+        .get(`${process.env.NEXT_PUBLIC_URL}/vehicle/all/${username}`, {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+          },
+        })
+        .then((res) => {
+          if (res.data.data) {
+            setAllVehicles(res.data.data);
+          }
+        })
+        .catch((e) => console.log(e));
     };
     getAllVehicles();
   }, []);
@@ -174,36 +172,56 @@ const page = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  
+  const handleOnPublish = async () => {
+    try {
+     await  axios
+        .get("https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json", {
+          params: {
+            destinations: `place_id:${destinationId}`,
+            origins: `place_id:${sourceId}`,
+            key: process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY,
+            units: "km",
+          },
+        })
+        .then((res) => {
+          setDistance(res.data.rows[0].elements[0].distance.text);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
 
-  const handleOnPublish = () => {
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_URL}/publish`,
-        {
-          sourceId: sourceId,
-          destinationId: destinationId,
-          sourceName: source,
-          destinationName: destination,
-          vehicleId: "5f9e1b9e7b6d4b0017f9f0c4",
-          etherCost,
-          distance: 100,
-          date: date,
-          time: "10:10",
-          startTime:  "10:10",
-          endTime:  "10:10",
-          numberOfSeats: passengers,
-        },
-        {
-          headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}` },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+     await  axios
+        .post(
+          `${process.env.NEXT_PUBLIC_URL}/publish`,
+          {
+            sourceId: sourceId,
+            destinationId: destinationId,
+            sourceName: source,
+            destinationName: destination,
+            vehicleId: "5f9e1b9e7b6d4b0017f9f0c4",
+            etherCost,
+            distance: distance,
+            date: date,
+            time: "10:10",
+            startTime: "10:10",
+            endTime: "10:10",
+            numberOfSeats: passengers,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <>
@@ -213,29 +231,57 @@ const page = () => {
           <h2 className="font-bold text-[30px]  text-[#FFF]">Publish a Ride</h2>
         </div>
         <div className="flex flex-col gap-[20px] px-[80px] py-[40px]  justify-between items-center">
-          
           <div className="relative flex gap-5">
-              
-                <Input
-                  value={source}
-                  ref={sourceInputRef}
-                  onChange={(e) => {
-                    setSource(e?.target?.value);
-                    handleSourceSuggestion(e?.target?.value);
-                  }}
-                  placeholder="From"
-                />
-                {sourcesuggestions.length > 0 && (
+            <Input
+              value={source}
+              ref={sourceInputRef}
+              onChange={(e) => {
+                setSource(e?.target?.value);
+                handleSourceSuggestion(e?.target?.value);
+              }}
+              placeholder="From"
+            />
+            {sourcesuggestions.length > 0 && (
+              <div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
+                <ul className="divide-y divide-gray-200">
+                  {sourcesuggestions.map((place, index) => (
+                    <li
+                      className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
+                      key={index}
+                      onClick={() => {
+                        setSource(place.description);
+                        setsourceId(place.place_id);
+                        setsourceSuggestions([]);
+                      }}
+                    >
+                      {place.description}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <Input
+              value={destination}
+              onChange={(e) => {
+                setDestination(e?.target?.value);
+                handleDestinationSuggestion(e?.target?.value);
+              }}
+              ref={destinationInputRef}
+              placeholder="To"
+            />
+            <div className="absolute w-full">
+              <ul>
+                {destinationSuggestions.length > 0 && (
                   <div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
                     <ul className="divide-y divide-gray-200">
-                      {sourcesuggestions.map((place, index) => (
+                      {destinationSuggestions.map((place, index) => (
                         <li
                           className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
                           key={index}
                           onClick={() => {
-                            setSource(place.description);
-                            setsourceId(place.place_id);
-                            setsourceSuggestions([]);
+                            setDestination(place.description);
+                            setDestinationId(place.place_id);
+                            setDestinationSuggestions([]);
                           }}
                         >
                           {place.description}
@@ -244,40 +290,10 @@ const page = () => {
                     </ul>
                   </div>
                 )}
-                <Input
-                  value={destination}
-                  onChange={(e) => {
-                    setDestination(e?.target?.value);
-                    handleDestinationSuggestion(e?.target?.value);
-                  }}
-                  ref={destinationInputRef}
-                  placeholder="To"
-                />
-                <div className="absolute w-full">
-                  <ul>
-                    {destinationSuggestions.length > 0 && (
-                      <div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
-                        <ul className="divide-y divide-gray-200">
-                          {destinationSuggestions.map((place, index) => (
-                            <li
-                              className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
-                              key={index}
-                              onClick={() => {
-                                setDestination(place.description);
-                                setDestinationId(place.place_id);
-                                setDestinationSuggestions([]);
-                              }}
-                            >
-                              {place.description}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </ul>
-                </div>
+              </ul>
+            </div>
           </div>
-          
+
           <DatePickerDemo setDate2={setDate} />
           <Input
             type="number"
@@ -286,49 +302,49 @@ const page = () => {
             placeholder="Passengers"
           />
 
-          <SelectDown data={allVehicles}/>
+          <SelectDown data={allVehicles} />
 
           <div className="flex gap-5">
-              <DatePicker
-                  className={cn(
-                    `flex h-10 w-full border-none bg-gray-50 dark:bg-zinc-800 text-black dark:text-white shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
+            <DatePicker
+              className={cn(
+                `flex h-10 w-full border-none bg-gray-50 dark:bg-zinc-800 text-black dark:text-white shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
               file:text-sm file:font-medium placeholder:text-neutral-400 dark:placeholder-text-neutral-600 
               focus-visible:outline-none focus-visible:ring-[2px]  focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-600
               disabled:cursor-not-allowed disabled:opacity-50
               dark:shadow-[0px_0px_1px_1px_var(--neutral-700)]
               group-hover/input:shadow-none transition duration-400
               `
-                  )}
-                  placeholderText="Pick-Up Time"
-                  selected={souceTime}
-                  onChange={(time: any) => setSouceTime(time)}
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeIntervals={15}
-                  dateFormat="h:mm aa"
-                  timeCaption="Time"
-              />
-              <DatePicker
-                  placeholderText="Drop Time"
-                  className={cn(
-                    `flex h-10 w-full border-none bg-gray-50 dark:bg-zinc-800 text-black dark:text-white shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
+              )}
+              placeholderText="Pick-Up Time"
+              selected={souceTime}
+              onChange={(time: any) => setSouceTime(time)}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={15}
+              dateFormat="h:mm aa"
+              timeCaption="Time"
+            />
+            <DatePicker
+              placeholderText="Drop Time"
+              className={cn(
+                `flex h-10 w-full border-none bg-gray-50 dark:bg-zinc-800 text-black dark:text-white shadow-input rounded-md px-3 py-2 text-sm  file:border-0 file:bg-transparent 
               file:text-sm file:font-medium placeholder:text-neutral-400 dark:placeholder-text-neutral-600 
               focus-visible:outline-none focus-visible:ring-[2px]  focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-600
               disabled:cursor-not-allowed disabled:opacity-50
               dark:shadow-[0px_0px_1px_1px_var(--neutral-700)]
               group-hover/input:shadow-none transition duration-400
               `
-                  )}
-                  selected={destinationTime}
-                  onChange={(time: any) => setDestinantionTime(time)}
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeIntervals={15}
-                  dateFormat="h:mm aa"
-                  timeCaption="Time"
-              />
+              )}
+              selected={destinationTime}
+              onChange={(time: any) => setDestinantionTime(time)}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={15}
+              dateFormat="h:mm aa"
+              timeCaption="Time"
+            />
           </div>
-          
+
           <Input
             type="text"
             value={vehicleId}
