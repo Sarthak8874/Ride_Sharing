@@ -39,6 +39,9 @@ const page = () => {
 
   const { longiLat, setlongiLat } = React.useContext(UserContext);
   console.log(longiLat);
+
+  const { destiLongiLat, setdestiLongiLat } = React.useContext(UserContext);
+
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -86,11 +89,35 @@ const page = () => {
         });
     };
 
-    // if (destinationId) {
-    //   getlongiLat(destinationId);
-    // }
+    const getdestiLongiLat = (input: string) => {
+      axios
+        .get(
+          `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${input}&key=${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}`
+        )
+        .then((res) => {
+          if (
+            res?.data
+          ) {
+            setdestiLongiLat({
+              latitude: res.data.result.geometry.location.lat,
+              longitude: res.data.result.geometry.location.lng,
+              label: res.data.result.name,
+            })
+          } else {
+            console.error("Invalid or unexpected response format");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching destination data:", error);
+        });
+    };
+
     if (sourceId) {
       getlongiLat(sourceId);
+    }
+
+    if (destinationId) {
+      getdestiLongiLat(destinationId);
     }
     
     

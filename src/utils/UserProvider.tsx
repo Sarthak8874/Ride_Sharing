@@ -6,6 +6,8 @@ interface UserContextType {
   token: string;
   vehicles: any;
   longiLat: GeoLocation;
+  destiLongiLat:GeoLocation;
+  setdestiLongiLat: (geoLocation: GeoLocation) => void;
   setlongiLat: (geoLocation: GeoLocation) => void;
   setVehicles: (vehicles: any) => void;
   fetchVehicles: () => void;
@@ -22,6 +24,8 @@ interface GeoLocation {
 export const UserContext = createContext<UserContextType>({
   token: "",
   longiLat: { latitude: null, longitude: null, label: ""},
+  destiLongiLat: { latitude: null, longitude: null, label: ""},
+  setdestiLongiLat: () => {},
   setlongiLat: () => {},
   vehicles: [],
   setVehicles: () => {},
@@ -94,6 +98,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     label:"",
   });
 
+  const [destiLongiLat, setdestiLongiLat] = useState<GeoLocation>({
+    latitude: null,
+    longitude: null,
+    label:"",
+  });
+
+
   async function fetchVehicles() {
     try {
       const response = await axios.get(`${backendUrl}/vehicle/all`, {
@@ -118,7 +129,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   // Provide the token and updateToken function to the context
   return (
-    <UserContext.Provider value={{ token, updateToken, vehicles, setVehicles, fetchVehicles,longiLat, setlongiLat }}>
+    <UserContext.Provider value={{ token, updateToken, vehicles, setVehicles, fetchVehicles,longiLat, setlongiLat, destiLongiLat, setdestiLongiLat }}>
       {children}
     </UserContext.Provider>
   );
