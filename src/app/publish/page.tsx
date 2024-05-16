@@ -371,4 +371,5 @@ const page = () => {
   );
 };
 
+// added
 export default page;
