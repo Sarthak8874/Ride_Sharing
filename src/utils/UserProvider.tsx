@@ -5,14 +5,24 @@ import axios from "axios";
 interface UserContextType {
   token: string;
   vehicles: any;
+  longiLat: GeoLocation;
+  setlongiLat: (geoLocation: GeoLocation) => void;
   setVehicles: (vehicles: any) => void;
   fetchVehicles: () => void;
   updateToken: (newToken: string) => void;
 }
 
+interface GeoLocation {
+  latitude: number | null;
+  longitude: number | null;
+  label: string;
+}
+
 // Create the context with the defined type
 export const UserContext = createContext<UserContextType>({
   token: "",
+  longiLat: { latitude: null, longitude: null, label: ""},
+  setlongiLat: () => {},
   vehicles: [],
   setVehicles: () => {},
   fetchVehicles: () => {},
@@ -77,6 +87,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   //     console.error("User data not found in localStorage");
   //   }
 
+  //getting long, lat
+  const [longiLat, setlongiLat] = useState<GeoLocation>({
+    latitude: null,
+    longitude: null,
+    label:"",
+  });
+
   async function fetchVehicles() {
     try {
       const response = await axios.get(`${backendUrl}/vehicle/all`, {
@@ -101,7 +118,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   // Provide the token and updateToken function to the context
   return (
-    <UserContext.Provider value={{ token, updateToken, vehicles, setVehicles, fetchVehicles }}>
+    <UserContext.Provider value={{ token, updateToken, vehicles, setVehicles, fetchVehicles,longiLat, setlongiLat }}>
       {children}
     </UserContext.Provider>
   );
