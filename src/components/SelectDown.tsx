@@ -1,5 +1,4 @@
-import * as React from "react"
-
+import * as React from "react";
 import {
   Select,
   SelectContent,
@@ -8,30 +7,30 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-export function SelectDown(data:any) {
+
+export function SelectDown({ data, setVehicleId }: { data: any; setVehicleId: any }) {
   return (
-    <Select >
+    <Select onValueChange={(value) => {
+      setVehicleId(value);
+    }}>
       <SelectTrigger className="w-[180px] bg-white">
-        <SelectValue   placeholder="Select Vehicle" />
+        <SelectValue placeholder="Select Vehicle" />
       </SelectTrigger>
       <SelectContent className="bg-white">
-        <SelectGroup> 
-            {data?.data?.length > 0 && 
-                data?.data?.map((item:any) => {
-                    console.log("item",item)
-                    return (
-                    <SelectItem value={item._id}>{item.vehicleNumber}</SelectItem>
-                    )
-                })
-            }
-            {
-                data?.data?.length === 0 && 
-                <SelectItem disabled value="1">None</SelectItem>
-            }
+        <SelectGroup>
+          {data?.length > 0 &&
+            data.map((item: any) => {
+              return (
+                <SelectItem value={item._id} key={item._id}>
+                  {item.vehicleNumber}
+                </SelectItem>
+              );
+            })}
+          {data?.length === 0 && <SelectItem disabled value="1">None</SelectItem>}
         </SelectGroup>
       </SelectContent>
     </Select>
-  )
+  );
 }
