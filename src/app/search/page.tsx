@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useEffect } from "react";
+import React, { use, useContext, useEffect } from "react";
 import { Input } from "@/components/ui/inputA";
 import { DatePickerDemo } from "../../components/Datepicker";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ const page = () => {
   const [destination, setDestination] = React.useState<string>("");
   const [sourceId,setsourceId] = React.useState<string>("");
   const [destinationId,setDestinationId] = React.useState<string>("");
+  const [rides, setRides] = React.useState<any[]>([]);
   const [sourcesuggestions, setsourceSuggestions] = React.useState<
     Prediction[]
   >([]);
@@ -119,7 +120,7 @@ const page = () => {
     
     
   },[sourceId, destinationId]);
-
+  const {token} = useContext(UserContext)
   async function calculateRoute() {
     if (!sourceInputRef.current || !destinationInputRef.current || sourceInputRef.current.value === '' || destinationInputRef.current.value === '') {
       return;
@@ -244,10 +245,11 @@ const page = () => {
           date: date,
           seatsRequired: passengers,
         },
-        headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}` },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data.data);
+        setRides(res.data.data);
       })
       .catch((e) => {
         console.log(e);
@@ -363,15 +365,16 @@ const page = () => {
       <div className="flex bg-[#11184b] text-white justify-center items-center">
         <div className="w-full flex justify-evenly">
           <h1 className="text-xl">Distance: <span className="underline text-2xl font-semibold">{distance}</span></h1>
-          <h1 className="text-xl">Duration: <span className="underline text-2xl font-semibold">{duration}</span></h1>
+          <h1 className="text-xl">Expected Duration: <span className="underline text-2xl font-semibold">{duration}</span></h1>
         </div>
         
       </div>
-      <BookComponent />
+      {rides.map((ride) => {
+        <BookComponent ride={ride} />
+      }
+    )}
       <MapComponent/>
       <div className="mt-10">END</div>
-      {/* <Map /> */}
-      {/* </div> */}
     </>
   );
 };
