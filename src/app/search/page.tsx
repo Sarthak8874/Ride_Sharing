@@ -24,6 +24,7 @@ const page = () => {
   const [destination, setDestination] = React.useState<string>("");
   const [sourceId,setsourceId] = React.useState<string>("");
   const [destinationId,setDestinationId] = React.useState<string>("");
+  const [rides, setRides] = React.useState<any[]>([]);
   const [sourcesuggestions, setsourceSuggestions] = React.useState<
     Prediction[]
   >([]);
@@ -119,7 +120,7 @@ const page = () => {
     
     
   },[sourceId, destinationId]);
-
+  const {token} = useContext(UserContext)
   async function calculateRoute() {
     if (!sourceInputRef.current || !destinationInputRef.current || sourceInputRef.current.value === '' || destinationInputRef.current.value === '') {
       return;
@@ -248,6 +249,10 @@ const page = () => {
       })
       .then((res) => {
         console.log(res.data.data);
+<<<<<<< HEAD
+=======
+        setRides(res.data.data);
+>>>>>>> c68fba26542830057f250b43af266a04cff4b7f9
       })
       .catch((e) => {
         console.log(e);
@@ -363,15 +368,16 @@ const page = () => {
       <div className="flex bg-[#11184b] text-white justify-center items-center">
         <div className="w-full flex justify-evenly">
           <h1 className="text-xl">Distance: <span className="underline text-2xl font-semibold">{distance}</span></h1>
-          <h1 className="text-xl">Duration: <span className="underline text-2xl font-semibold">{duration}</span></h1>
+          <h1 className="text-xl">Expected Duration: <span className="underline text-2xl font-semibold">{duration}</span></h1>
         </div>
         
       </div>
-      <BookComponent />
+      {rides.map((ride) => {
+        <BookComponent ride={ride} />
+      }
+    )}
       <MapComponent/>
       <div className="mt-10">END</div>
-      {/* <Map /> */}
-      {/* </div> */}
     </>
   );
 };

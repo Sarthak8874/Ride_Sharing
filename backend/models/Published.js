@@ -46,7 +46,7 @@ const publishedSchema = new mongoose.Schema({
     },
     distance: {
         type: Number,
-        required: true
+        // required: true
     },
     date: {
         type: Date,
@@ -60,7 +60,7 @@ const publishedSchema = new mongoose.Schema({
     },
     time: {
         type: String,
-        required: true
+        // required: true
     },
     startTime: {
         type: String,
