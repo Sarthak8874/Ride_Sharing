@@ -9,6 +9,9 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import axios from "axios";
 import { SelectDown } from "@/components/SelectDown";
+import { UserContext } from "@/utils/UserProvider";
+import { toast } from "react-toastify";
+import {  useRouter } from "next/navigation";
 
 interface GeoLocation {
   latitude: number | null;
@@ -23,7 +26,7 @@ const page = () => {
   const [source, setSource] = React.useState<string>("");
   const [sourceId, setsourceId] = React.useState<string>("");
   const [destinationId, setDestinationId] = React.useState<string>("");
-  const [date, setDate] = React.useState();
+  const [date, setDate] = React.useState(null);
   const [startTime, setstartTime] = React.useState();
   const [endTime, setendTime] = React.useState();
   const [souceTime, setSouceTime] = useState(null);
@@ -80,7 +83,7 @@ const page = () => {
       axios
         .get(`${process.env.NEXT_PUBLIC_URL}/vehicle/all/${username}`, {
           headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
@@ -171,7 +174,8 @@ const page = () => {
     // Cleanup function on unmount
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-
+  const {token} = React.useContext(UserContext);
+  const router = useRouter();
   const handleOnPublish = async () => {
     try {
      await  axios
@@ -198,23 +202,34 @@ const page = () => {
             destinationId: destinationId,
             sourceName: source,
             destinationName: destination,
-            vehicleId: "5f9e1b9e7b6d4b0017f9f0c4",
+            vehicleId: vehicleId,
             etherCost,
-            distance: distance,
+            // distance: distance,
             date: date,
-            time: "10:10",
-            startTime: "10:10",
-            endTime: "10:10",
+            startTime: souceTime,
+            endTime: destinationTime,
             numberOfSeats: passengers,
           },
           {
             headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         )
         .then((res) => {
           console.log(res);
+          toast.success("Ride Published Successfully", )
+          setDestinantionTime(null);
+          setSouceTime(null);
+          setDestination("");
+          setSource("");
+          setetherCost("");
+          setvehicleId("");
+          setPassengers("");
+          setsourceId("");
+          setDestinationId("");
+          setDate(null);
+          router.push("/");
         })
         .catch((e) => {
           console.log(e);
@@ -302,7 +317,7 @@ const page = () => {
             placeholder="Passengers"
           />
 
-          <SelectDown data={allVehicles} />
+          <SelectDown setVehicleId={setvehicleId} data={allVehicles} />
 
           <div className="flex gap-5">
             <DatePicker
@@ -345,12 +360,6 @@ const page = () => {
             />
           </div>
 
-          <Input
-            type="text"
-            value={vehicleId}
-            onChange={(e) => setvehicleId(e?.target?.value)}
-            placeholder="Enter Vechicle Id"
-          />
           <Input
             type="number"
             value={etherCost}
