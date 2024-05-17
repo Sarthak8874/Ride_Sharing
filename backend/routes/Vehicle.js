@@ -18,11 +18,13 @@ VehiRouter.post("/register", async (req, res) => {
             vehicleRc,
             approvedStatus,
         } = req.body;
-
+        
         console.log(req.body);
 
+        
         async function uploadImage(imagePath,folderName) {
             try {
+                if(imagePath==null) return "null";
                 const result = await cloudinary.uploader.upload(imagePath, {
                     unique_filename: true,
                     folder: folderName,
@@ -36,6 +38,8 @@ VehiRouter.post("/register", async (req, res) => {
         const vehicleImage = await uploadImage(vehicleImg,"vehicleImg");
         const ownerIdProof = await uploadImage(idProof,"IdProof");
         const vehicleRC = await uploadImage(vehicleRc,"vehicleRc");
+
+        console.log(vehicleImage);
 
         const veh = await Vehicle.create({
             ownerUsername: username,
