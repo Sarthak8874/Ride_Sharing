@@ -44,7 +44,7 @@ export function RegisterVehicle() {
 						<Input
 							id="email"
 							placeholder="projectmayhem@fc.com"
-							type="email"
+							type="text"
 						/>
 					</LabelInputContainer>
 

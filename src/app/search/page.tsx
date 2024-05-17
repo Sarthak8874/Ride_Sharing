@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useEffect } from "react";
+import React, { use, useContext, useEffect } from "react";
 import { Input } from "@/components/ui/inputA";
 import { DatePickerDemo } from "../../components/Datepicker";
 import { Button } from "@/components/ui/button";
@@ -234,7 +234,7 @@ const page = () => {
     // Cleanup function on unmount
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-
+  const {token} = useContext(UserContext); 
   const handleOnSearch = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_URL}/search`, {
@@ -244,10 +244,10 @@ const page = () => {
           date: date,
           seatsRequired: passengers,
         },
-        headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}` },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data.data);
       })
       .catch((e) => {
         console.log(e);
