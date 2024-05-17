@@ -14,7 +14,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-
 export default function Navbar() {
   const {token, updateToken} = React.useContext(UserContext);
   const router = useRouter();
@@ -49,18 +48,18 @@ export default function Navbar() {
             <span className="sr-only">Acme Inc</span>
           </Link>
           <nav className="hidden md:flex gap-4">
-            <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="#">
+            <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="/">
               Home
             </Link>
-            <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="#">
-              About
+            <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="/search">
+              Search
             </Link>
-            <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="#">
-              Services
+            <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="/publish">
+              Publish
             </Link>
-            <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="#">
-              Contact
-            </Link>
+            {/* <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="/book">
+              Book Ride
+            </Link> */}
           </nav>
           <div className="flex items-center gap-4">
             {token!=="" && <Button onClick={()=>handleLogout()}>Sign Out</Button>}
