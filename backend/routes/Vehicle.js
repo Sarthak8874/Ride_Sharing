@@ -48,7 +48,7 @@ VehiRouter.post("/register", async (req, res) => {
             vehicleImage,
             ownerIdProof,
             vehicleModel,
-            approvedStatus,
+            approvedStatus:'Approved',
             vehicleRC,
         });
 
