@@ -235,7 +235,7 @@ const page = () => {
     // Cleanup function on unmount
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-  const {token} = useContext(UserContext); 
+
   const handleOnSearch = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_URL}/search`, {
@@ -249,10 +249,7 @@ const page = () => {
       })
       .then((res) => {
         console.log(res.data.data);
-<<<<<<< HEAD
-=======
         setRides(res.data.data);
->>>>>>> c68fba26542830057f250b43af266a04cff4b7f9
       })
       .catch((e) => {
         console.log(e);
@@ -372,9 +369,10 @@ const page = () => {
         </div>
         
       </div>
-      {rides.map((ride) => {
-        <BookComponent ride={ride} />
-      }
+      {rides.map((ride) => (
+        <BookComponent key={ride._id} ride={ride} />
+      ))}
+
     )}
       <MapComponent/>
       <div className="mt-10">END</div>
