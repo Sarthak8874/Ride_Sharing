@@ -154,6 +154,8 @@ router.get("/book/:id", auth, async (req, res) => {
     const driverDetails = {
       firstName: ride.driverId.firstName,
       lastName: ride.driverId.lastName,
+      username: ride.driverId.username,
+      walletAddress: ride.driverId.walletAddress,
     };
     const vehicleDetails = {
       // vehicleNumber: ride.vehicleId.vehicleNumber,
