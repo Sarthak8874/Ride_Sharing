@@ -388,11 +388,16 @@ const page = () => {
           </h1>
         </div>
       </div>
-      {rides.map((ride) => (
-        <BookComponent key={ride._id} ride={ride} />
-      ))}
-
-      <MapComponent/>
+      <div className="flex flex-row w-full">
+        <div className="w-[75%]">
+          {rides.map((ride) => (
+            <BookComponent key={ride._id} ride={ride} />
+          ))}
+        </div>
+        <div className="w-[25%]">
+          {sourceId && destinationId && <MapComponent />}
+        </div>
+      </div>
       <div className="mt-10">END</div>
     </>
   );
