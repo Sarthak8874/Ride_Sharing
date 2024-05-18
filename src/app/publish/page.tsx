@@ -51,13 +51,23 @@ const page = () => {
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
 
   const userDataString = localStorage.getItem("userData");
+
   let username = "";
-  if (userDataString !== null) {
+  if(userDataString === null || userDataString === undefined || userDataString === ""){
+    username = "null";
+  }
+  else
+  {
+    console.log("usr",userDataString);
     const userData = JSON.parse(userDataString);
     username = userData.username;
-  } else {
-    console.error("User data not found in localStorage");
   }
+  // if (userDataString !== null) {
+  //   const userData = JSON.parse(userDataString);
+  //   username = userData.username;
+  // } else {
+  //   console.error("User data not found in localStorage");
+  // }
 
   useEffect(() => {
     const getLocation = () => {
