@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 
 // Define the type for the context value
@@ -18,6 +18,8 @@ interface UserContextType {
   setVehicles: (vehicles: any) => void;
   fetchVehicles: () => void;
   updateToken: (newToken: string) => void;
+  userData: any;
+  setUserData: (newUserData: any) => void;
 }
 
 interface GeoLocation {
@@ -43,6 +45,8 @@ export const UserContext = createContext<UserContextType>({
   setVehicles: () => {},
   fetchVehicles: () => {},
   updateToken: () => {},
+  userData: null,
+  setUserData: () => {},
 });
 
 // Define the props type for the UserProvider
@@ -62,6 +66,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       });
       // If the request is successful and returns data, the token is valid
       if (response.data) {
+        setUserData(response.data.data);
         return true;
       } else {
         return false;
@@ -75,7 +80,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   // State for token
   const [token, setToken] = useState<string>("");
-
+  const [userData, setUserData] = useState<any>(null);
   useEffect(() => {
     const tokenFromStorage = localStorage.getItem("token");
     if (tokenFromStorage) {
@@ -143,12 +148,15 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const updateToken = (newToken: string) => {
     setToken(newToken);
   };
+  const updateUserData = (newUserData: any) => {
+    setUserData(newUserData);
+  }
 
 
 
   // Provide the token and updateToken function to the context
   return (
-    <UserContext.Provider value={{ token, updateToken, vehicles, setVehicles, fetchVehicles,longiLat, setlongiLat, destiLongiLat, setdestiLongiLat, 
+    <UserContext.Provider value={{ token, updateToken, userData, setUserData, vehicles, setVehicles, fetchVehicles,longiLat, setlongiLat, destiLongiLat, setdestiLongiLat, 
       directionsResponse, distance, duration, setDistance,setDuration, setDirectionsResponse}}
     >
       {children}
