@@ -398,7 +398,7 @@ const page = () => {
           {sourceId && destinationId && <MapComponent />}
         </div>
       </div>
-      <div className="mt-10">END</div>
+      {/* <div className="mt-10">END</div> */}
     </>
   );
 };

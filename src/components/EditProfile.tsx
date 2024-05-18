@@ -34,7 +34,7 @@ export function EditProfile({
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/user/${username}`,
+        `${process.env.NEXT_PUBLIC_URL}/user/update/profile/${username}`,
         {
           method: "PUT",
           headers: {

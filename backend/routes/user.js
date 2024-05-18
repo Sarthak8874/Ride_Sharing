@@ -66,7 +66,7 @@ userRouter.post("/signin", async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found",
+        message: "User not found in signin",
       });
     }
 
@@ -106,7 +106,7 @@ userRouter.post("/signin", async (req, res) => {
 });
 
 //edit profile details
-userRouter.put("/:id", async (req, res) => {
+userRouter.put("/update/profile/:id", async (req, res) => {
   try {
     const username = req.params.id;
 
@@ -119,7 +119,7 @@ userRouter.put("/:id", async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User Not Found",
+        message: "User Not Found in put id",
       });
     }
 
@@ -143,7 +143,7 @@ userRouter.get("/profile",auth, async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found",
+        message: "User not found in profile",
       });
     }
     return res.status(200).json({
@@ -158,5 +158,36 @@ userRouter.get("/profile",auth, async (req, res) => {
     });
     }
 });
+
+
+userRouter.put("/update-wallet",auth, async (req, res) => {
+  try {    
+    const {walletAddress} = req.body;
+    const id = req.user._id;
+    const user = await User.findByIdAndUpdate({_id:id}, { walletAddress: walletAddress }, { new: true });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found in put",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Wallet Address Updated",
+      data: user,
+    });
+
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update wallet address",
+      data : err.message
+    });
+  }
+
+});
+
+
 
 module.exports = userRouter;
