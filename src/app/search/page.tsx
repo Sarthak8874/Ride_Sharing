@@ -373,7 +373,6 @@ const page = () => {
         <BookComponent key={ride._id} ride={ride} />
       ))}
 
-    )}
       <MapComponent/>
       <div className="mt-10">END</div>
     </>
