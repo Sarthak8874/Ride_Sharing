@@ -84,6 +84,7 @@ userRouter.post("/signin", async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       username: user.username,
+      // walletAddress: user.walletAddress,
     };
 
     const token = jwt.sign(userData, process.env.JWT_SECRET, {
