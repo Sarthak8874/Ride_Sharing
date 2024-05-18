@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { FaCar, FaEthereum } from 'react-icons/fa';
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
+import { sendTransaction } from "../../../context/TransactionContext";
 interface BookingData {
   _id: string;
   sourceId: string;
@@ -55,24 +55,25 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
   // Function to handle form submission
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    setIsDisabled(true);
-    axios.post(`${backendUrl}/book/${bookId}`, {
-      seatsRequired
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    }).then((res) => {
-      console.log(res.data)
-      toast.success("Booking Successful, Redirecting to search...");
-      setTimeout(() => {
-        window.location.href = '/search';
-      }, 2000);
-    }).catch((err) => {
-      console.log(err)
-      toast.error("Booking Failed");
-      setIsDisabled(false);
-    })
+    sendTransaction();
+    // setIsDisabled(true);
+    // axios.post(`${backendUrl}/book/${bookId}`, {
+    //   seatsRequired
+    // }, {
+    //   headers: {
+    //     Authorization: `Bearer ${localStorage.getItem('token')}`
+    //   }
+    // }).then((res) => {
+    //   console.log(res.data)
+    //   toast.success("Booking Successful, Redirecting to search...");
+    //   setTimeout(() => {
+    //     window.location.href = '/search';
+    //   }, 2000);
+    // }).catch((err) => {
+    //   console.log(err)
+    //   toast.error("Booking Failed");
+    //   setIsDisabled(false);
+    // })
   }
 
   // Function to format date
@@ -90,6 +91,8 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
     const formattedDate: string = `${dayOfWeekStr}, ${dayOfMonthStr} ${monthStr}`;
     return formattedDate;
   };
+  // const { sendTransaction} = React.useContext(TransactionContext);
+
 
   return (
     <div className='w-screen flex items-center flex-col mt-10 overflow-x-hidden '>
