@@ -6,6 +6,7 @@ import { FaRegCircle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import  moment from 'moment';
 
 
 interface Ride {
@@ -42,6 +43,7 @@ const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
     toast.success("Moving to booking page")
     router.push(`/book/${id}`);
   };
+
   const calculateTimeDifference = (startTime: string, endTime: string): string => {
     const [startHours, startMinutes] = startTime.split(":").map(Number);
     const [endHours, endMinutes] = endTime.split(":").map(Number);
@@ -56,6 +58,19 @@ const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
     
     return `${hours}h ${minutes}m`;
   };
+  // Define two dates
+const date1 = moment('2023-05-18T12:00:00'); // Format: YYYY-MM-DDTHH:mm:ss
+const date2 = moment('2023-05-18T15:30:00');
+
+// Calculate the difference in various units
+const diffInMinutes = date2.diff(date1, 'minutes'); // Difference in minutes
+const diffInHours = date2.diff(date1, 'hours'); // Difference in hours
+const diffInDays = date2.diff(date1, 'days'); // Difference in days
+
+// Output the differences
+console.log(`Difference in minutes: ${diffInMinutes} minutes`);
+console.log(`Difference in hours: ${diffInHours} hours`);
+console.log(`Difference in days: ${diffInDays} days`);
   const timeDifference = calculateTimeDifference(ride.startTime, ride.endTime);
   return (
     <>
@@ -82,9 +97,9 @@ const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
         <div className="flex justify-between items-center">
           <div className="flex gap-[10px] h-[80px]">
             <div className="flex flex-col justify-between items-center">
-              <div>{ride.startTime}</div>
-              <div className="text-[12px]">{timeDifference}</div>
-              <div>{ride.endTime}</div>
+              <div>{moment(ride.startTime).format('h:mm a')}</div>
+              <div className="text-[12px]">{}</div>
+              <div>{moment(ride.endTime).format('h:mm a')}</div>
             </div>
             <div className="flex flex-col items-center">
               <FaRegCircle />
