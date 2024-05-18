@@ -4,7 +4,7 @@ import React, { use, useContext, useEffect } from "react";
 import { Input } from "@/components/ui/inputA";
 import { DatePickerDemo } from "../../components/Datepicker";
 import { Button } from "@/components/ui/button";
-import axios from "axios"; 
+import axios from "axios";
 
 import BookComponent from "./BookComponent";
 import { UserContext } from "@/utils/UserProvider";
@@ -16,14 +16,14 @@ interface GeoLocation {
 }
 interface Prediction {
   description: string;
-  place_id:string;
+  place_id: string;
 }
 
 const page = () => {
   const [source, setSource] = React.useState<string>("");
   const [destination, setDestination] = React.useState<string>("");
-  const [sourceId,setsourceId] = React.useState<string>("");
-  const [destinationId,setDestinationId] = React.useState<string>("");
+  const [sourceId, setsourceId] = React.useState<string>("");
+  const [destinationId, setDestinationId] = React.useState<string>("");
   const [rides, setRides] = React.useState<any[]>([]);
   const [sourcesuggestions, setsourceSuggestions] = React.useState<
     Prediction[]
@@ -38,7 +38,17 @@ const page = () => {
     longitude: null,
   });
 
-  const { longiLat, destiLongiLat, setlongiLat, setDirectionsResponse,distance,duration, setDistance, setDuration, setdestiLongiLat } = React.useContext(UserContext);
+  const {
+    longiLat,
+    destiLongiLat,
+    setlongiLat,
+    setDirectionsResponse,
+    distance,
+    duration,
+    setDistance,
+    setDuration,
+    setdestiLongiLat,
+  } = React.useContext(UserContext);
 
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
@@ -70,14 +80,12 @@ const page = () => {
           `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${input}&key=${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}`
         )
         .then((res) => {
-          if (
-            res?.data
-          ) {
+          if (res?.data) {
             setlongiLat({
               latitude: res.data.result.geometry.location.lat,
               longitude: res.data.result.geometry.location.lng,
               label: res.data.result.name,
-            })
+            });
           } else {
             console.error("Invalid or unexpected response format");
           }
@@ -93,14 +101,12 @@ const page = () => {
           `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${input}&key=${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}`
         )
         .then((res) => {
-          if (
-            res?.data
-          ) {
+          if (res?.data) {
             setdestiLongiLat({
               latitude: res.data.result.geometry.location.lat,
               longitude: res.data.result.geometry.location.lng,
               label: res.data.result.name,
-            })
+            });
           } else {
             console.error("Invalid or unexpected response format");
           }
@@ -117,17 +123,20 @@ const page = () => {
     if (destinationId) {
       getdestiLongiLat(destinationId);
     }
-    
-    
-  },[sourceId, destinationId]);
-  const {token} = useContext(UserContext)
+  }, [sourceId, destinationId]);
+  const { token } = useContext(UserContext);
   async function calculateRoute() {
-    if (!sourceInputRef.current || !destinationInputRef.current || sourceInputRef.current.value === '' || destinationInputRef.current.value === '') {
+    if (
+      !sourceInputRef.current ||
+      !destinationInputRef.current ||
+      sourceInputRef.current.value === "" ||
+      destinationInputRef.current.value === ""
+    ) {
       return;
     }
-    
+
     const directionsService = new google.maps.DirectionsService();
-    
+
     const results = await directionsService.route({
       origin: sourceInputRef.current.value,
       destination: destinationInputRef.current.value,
@@ -135,25 +144,30 @@ const page = () => {
     });
 
     setDirectionsResponse(results);
-    if (results.routes && results.routes.length > 0 && results.routes[0].legs && results.routes[0].legs.length > 0) {
-      setDistance(results.routes[0].legs[0].distance?.text || '');
-      setDuration(results.routes[0].legs[0].duration?.text || '');
+    if (
+      results.routes &&
+      results.routes.length > 0 &&
+      results.routes[0].legs &&
+      results.routes[0].legs.length > 0
+    ) {
+      setDistance(results.routes[0].legs[0].distance?.text || "");
+      setDuration(results.routes[0].legs[0].duration?.text || "");
     }
   }
 
   function clearRoute() {
     setDirectionsResponse(null);
-    setDistance('');
-    setDuration('');
-    setSource('');
-    setDestination('');
-    setlongiLat({ latitude: null, longitude: null, label: '' });
-    setdestiLongiLat({ latitude: null, longitude: null, label: '' });
+    setDistance("");
+    setDuration("");
+    setSource("");
+    setDestination("");
+    setlongiLat({ latitude: null, longitude: null, label: "" });
+    setdestiLongiLat({ latitude: null, longitude: null, label: "" });
     if (sourceInputRef.current) {
-     sourceInputRef.current.value = '';
+      sourceInputRef.current.value = "";
     }
     if (destinationInputRef.current) {
-     destinationInputRef.current.value = '';
+      destinationInputRef.current.value = "";
     }
   }
 
@@ -255,7 +269,7 @@ const page = () => {
         console.log(e);
       });
   };
-  
+
   return (
     <>
       {/* <div className="flex h-full"> */}
@@ -267,7 +281,7 @@ const page = () => {
             onChange={(e) => {
               setSource(e?.target?.value);
               handleSourceSuggestion(e?.target?.value);
-              setlongiLat({ latitude: null, longitude: null, label: '' });
+              setlongiLat({ latitude: null, longitude: null, label: "" });
               setDirectionsResponse(null);
             }}
             placeholder="From"
@@ -298,7 +312,7 @@ const page = () => {
             onChange={(e) => {
               setDestination(e?.target?.value);
               handleDestinationSuggestion(e?.target?.value);
-              setdestiLongiLat({ latitude: null, longitude: null, label: '' });
+              setdestiLongiLat({ latitude: null, longitude: null, label: "" });
               setDirectionsResponse(null);
             }}
             ref={destinationInputRef}
@@ -364,16 +378,20 @@ const page = () => {
       </div>
       <div className="flex bg-[#11184b] text-white justify-center items-center">
         <div className="w-full flex justify-evenly">
-          <h1 className="text-xl">Distance: <span className="underline text-2xl font-semibold">{distance}</span></h1>
-          <h1 className="text-xl">Expected Duration: <span className="underline text-2xl font-semibold">{duration}</span></h1>
+          <h1 className="text-xl">
+            Distance:{" "}
+            <span className="underline text-2xl font-semibold">{distance}</span>
+          </h1>
+          <h1 className="text-xl">
+            Expected Duration:{" "}
+            <span className="underline text-2xl font-semibold">{duration}</span>
+          </h1>
         </div>
-        
       </div>
       {rides.map((ride) => (
         <BookComponent key={ride._id} ride={ride} />
       ))}
 
-    )}
       <MapComponent/>
       <div className="mt-10">END</div>
     </>
