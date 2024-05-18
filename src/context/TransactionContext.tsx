@@ -15,7 +15,7 @@ export const sendTransaction = async () => {
     try {
         if (!ethereum) return alert("Please install MetaMask.");
 
-        const addressTo = "0xd9cfd0e4a92ebe4cacc20e6c8532283e7ca7e9af"; 
+        const addressTo = "0xcf214706b59a9a329a96bf2042310fc98da88dad"; 
         const transactionContract = getEthereumContract();
         const parsedAmount = ethers.utils.parseEther("0.00001");
 
