@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    walletAddress : {
+        type: String,
+        unique: true,
+        default: null
+    },
     // walletAddress: {
     //     type: String,
     //     // required: true,
