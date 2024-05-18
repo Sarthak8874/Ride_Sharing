@@ -9,6 +9,7 @@ import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import { Button } from "@/components/ui/moving-border";
 import Link from "next/link";
 import OurServices from "@/components/OurServices"
+import { useEffect, useState } from "react";
 
 
 const words = [
@@ -31,6 +32,40 @@ const words = [
 ];
 
 function HomePage() {
+  const [connected, toggleConnect] = useState(false);
+  const [currAddress, updateAddress] = useState("0x");
+
+  async function getAddress() {
+    const ethers = require("ethers");
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const addr = await signer.getAddress();
+    updateAddress(addr);
+  }
+
+  async function isConnected() {
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    if (accounts.length) {
+      console.log(`You're connected to: ${accounts[0]}`);
+      toggleConnect(true);
+      getAddress();
+    } else {
+      console.log("Metamask is not connected");
+    }
+  }
+
+  async function connectWebsite() {
+    const ethers = require("ethers");
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+
+    const addr = await signer.getAddress();
+    updateAddress(addr);
+    updateButton();
+    toggleConnect(true);
+  }
+
   return (
     <div>
       <div className="flex flex-col items-center justify-center h-[40rem]  ">
@@ -48,6 +83,7 @@ function HomePage() {
             <Button
               borderRadius="1.75rem"
               className=" dark:bg-slate-900  dark:text-white border-neutral-200 dark:border-slate-800 w-40 h-10 rounded-xl bg-white text-black border  text-bold"
+              onClick={connectWebsite}
             >
               Connect Wallet
             </Button>
@@ -61,7 +97,7 @@ function HomePage() {
       >
         <TextRevealCard
           text="See wallet address Here"
-          revealText="0Xhfjwdnbuchfijwnoco^73682ndu "
+          revealText={`${currAddress}`}
         >
           <TextRevealCardTitle>
             Sometimes, you just need to see it.

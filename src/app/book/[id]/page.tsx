@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { FaCar, FaEthereum } from 'react-icons/fa';
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { TransactionContext } from '../context/TransactionContext';
 
 interface BookingData {
   _id: string;
@@ -90,6 +91,13 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
     const formattedDate: string = `${dayOfWeekStr}, ${dayOfMonthStr} ${monthStr}`;
     return formattedDate;
   };
+  const { sendTransaction} = useContext(TransactionContext);
+  const handleSubmit = (e) => {
+
+    e.preventDefault();
+
+    sendTransaction();
+  }
 
   return (
     <div className='w-screen flex items-center flex-col mt-10 overflow-x-hidden '>
