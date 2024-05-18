@@ -6,8 +6,7 @@ import { FaRegCircle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import  moment from 'moment';
-
+import moment from "moment";
 
 interface Ride {
   _id: string;
@@ -35,43 +34,26 @@ interface Ride {
   __v: number;
 }
 
-
 const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
   const router = useRouter();
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.preventDefault();
-    toast.success("Moving to booking page")
+    toast.success("Moving to booking page");
     router.push(`/book/${id}`);
   };
 
-  const calculateTimeDifference = (startTime: string, endTime: string): string => {
-    const [startHours, startMinutes] = startTime.split(":").map(Number);
-    const [endHours, endMinutes] = endTime.split(":").map(Number);
-    
-    const startDate = new Date(0, 0, 0, startHours, startMinutes);
-    const endDate = new Date(0, 0, 0, endHours, endMinutes);
+  const moment1 = moment(ride.startTime);
+  const moment2 = moment(ride.endTime);
+  const differenceInMinutes = moment2.diff(moment1, 'minutes');
+
+  // Convert the difference into hours and minutes
+  const hours = Math.floor(differenceInMinutes / 60);
+  const minutes = differenceInMinutes % 60;
   
-    let diff = (endDate.getTime() - startDate.getTime()) / 1000; // difference in seconds
-    const hours = Math.floor(diff / 3600);
-    diff -= hours * 3600;
-    const minutes = Math.floor(diff / 60);
-    
-    return `${hours}h ${minutes}m`;
-  };
-  // Define two dates
-const date1 = moment('2023-05-18T12:00:00'); // Format: YYYY-MM-DDTHH:mm:ss
-const date2 = moment('2023-05-18T15:30:00');
+  // Format the result as hh:mm
+  const formattedDifference = `${hours}h ${minutes}min`;
+  
 
-// Calculate the difference in various units
-const diffInMinutes = date2.diff(date1, 'minutes'); // Difference in minutes
-const diffInHours = date2.diff(date1, 'hours'); // Difference in hours
-const diffInDays = date2.diff(date1, 'days'); // Difference in days
-
-// Output the differences
-console.log(`Difference in minutes: ${diffInMinutes} minutes`);
-console.log(`Difference in hours: ${diffInHours} hours`);
-console.log(`Difference in days: ${diffInDays} days`);
-  const timeDifference = calculateTimeDifference(ride.startTime, ride.endTime);
   return (
     <>
       <div className="m-[40px]   border-[#7c7c7c] flex flex-col gap-[30px] h-[200px] rounded-[20px] cursor-pointer py-[20px] px-[10px] shadow-md hover:shadow-lg transition duration-300">
@@ -82,7 +64,9 @@ console.log(`Difference in days: ${diffInDays} days`);
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div>
-              <div>{ride.driver.firstName}&nbsp;{ride.driver.lastName}</div>
+              <div>
+                {ride.driver.firstName}&nbsp;{ride.driver.lastName}
+              </div>
               <div className="flex justify-between items-center gap-[5px]">
                 <IoStar />
                 <span>4.8</span>
@@ -97,9 +81,9 @@ console.log(`Difference in days: ${diffInDays} days`);
         <div className="flex justify-between items-center">
           <div className="flex gap-[10px] h-[80px]">
             <div className="flex flex-col justify-between items-center">
-              <div>{moment(ride.startTime).format('h:mm a')}</div>
-              <div className="text-[12px]">{}</div>
-              <div>{moment(ride.endTime).format('h:mm a')}</div>
+              <div>{moment(ride.startTime).format("h:mm a")}</div>
+              <div className="text-[12px]">{formattedDifference}</div>
+              <div>{moment(ride.endTime).format("h:mm a")}</div>
             </div>
             <div className="flex flex-col items-center">
               <FaRegCircle />
@@ -111,7 +95,9 @@ console.log(`Difference in days: ${diffInDays} days`);
               <div>{ride.destinationName}</div>
             </div>
           </div>
-          <Button variant="outline" onClick={(e)=>handleSubmit(e, ride._id)}>Book Now</Button>
+          <Button variant="outline" onClick={(e) => handleSubmit(e, ride._id)}>
+            Book Now
+          </Button>
         </div>
       </div>
     </>
