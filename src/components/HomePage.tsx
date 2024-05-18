@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import {
   TextRevealCard,
   TextRevealCardDescription,
@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/moving-border";
 import Link from "next/link";
 import OurServices from "@/components/OurServices"
 import { useEffect, useState } from "react";
+import { UserContext } from "@/utils/UserProvider";
+import axios from "axios";
+import { get } from "http";
 
 
 const words = [
@@ -32,9 +35,9 @@ const words = [
 ];
 
 function HomePage() {
+  const {token, userData} = useContext(UserContext);
   const [connected, toggleConnect] = useState(false);
-  const [currAddress, updateAddress] = useState("0x");
-
+  const [currAddress, updateAddress] = useState("No Address Currently");
   async function getAddress() {
     const ethers = require("ethers");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -42,7 +45,6 @@ function HomePage() {
     const addr = await signer.getAddress();
     updateAddress(addr);
   }
-
   async function isConnected() {
     const accounts = await window.ethereum.request({ method: "eth_accounts" });
     if (accounts.length) {
@@ -53,7 +55,7 @@ function HomePage() {
       console.log("Metamask is not connected");
     }
   }
-
+  const backendUrl = process.env.NEXT_PUBLIC_URL;
   async function connectWebsite() {
     const ethers = require("ethers");
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
@@ -63,7 +65,29 @@ function HomePage() {
     const addr = await signer.getAddress();
     updateAddress(addr);
     toggleConnect(true);
+    axios.put(`${backendUrl}/user/update-wallet`, {
+      walletAddress: addr
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then((res) => {
+      console.log(res.data);
+    }).catch((err) => {
+      console.log(err.response.data);
+    }
+    );
   }
+  useEffect(() => {
+    if(userData){
+      if(userData.walletAddress!==null){
+        updateAddress(userData.walletAddress);
+        toggleConnect(true);
+      }
+    }
+  }, []);
+
+  
 
   return (
     <div>
@@ -77,7 +101,7 @@ function HomePage() {
           Join our community to experience secure, transparent, and efficient
           ridesharing like never before
         </p>
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4 mt-4">
+        { !connected && token &&  <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4 mt-4">
           <Link href="#textreveal">
             <Button
               borderRadius="1.75rem"
@@ -88,6 +112,7 @@ function HomePage() {
             </Button>
           </Link>
         </div>
+        }
       </div>
 
       <div

@@ -72,7 +72,7 @@ export function SignupForm() {
             phoneNumber: "",
           });
           setLoader(false);
-          router.push("/publish");
+          router.push("/");
           
           toast.success("Sign up Done!!");
         });

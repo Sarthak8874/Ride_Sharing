@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Navbar() {
-  const {token, updateToken} = React.useContext(UserContext);
+  const {token, updateToken, setUserData} = React.useContext(UserContext);
   const router = useRouter();
   const handleButtonClick = (text:string) => {
     router.push(`/${text}`);
@@ -34,7 +34,7 @@ export default function Navbar() {
       localStorage.removeItem("userData");
       toast.success("Logged Out successfully!!");
       updateToken("");
-
+      setUserData(null);
       router.push('/');
    }
   }

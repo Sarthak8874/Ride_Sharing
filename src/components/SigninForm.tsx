@@ -28,7 +28,7 @@ export function SigninForm() {
       localStorage.setItem("userData", JSON.stringify(res.data.userData) );
       updateToken(res.data.token);
       setFormData({ email: "", password: "" });
-      router.push("/publish");
+      router.push("/");
       toast.success("Logged in successfully", {
         autoClose: 2000
       });
