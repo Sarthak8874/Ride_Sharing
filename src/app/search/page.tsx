@@ -50,6 +50,7 @@ const page = () => {
     setdestiLongiLat,
   } = React.useContext(UserContext);
 
+  const [showMap, setShowMap] = React.useState<boolean>(true);
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -271,135 +272,153 @@ const page = () => {
   };
 
   return (
-    <>
-      {/* <div className="flex h-full"> */}
-      <div className="flex bg-[#11184b] px-[80px] py-[40px] flex-row justify-between items-center">
-        <div className="relative">
-          <Input
-            value={source}
-            ref={sourceInputRef}
-            onChange={(e) => {
-              setSource(e?.target?.value);
-              handleSourceSuggestion(e?.target?.value);
-              setlongiLat({ latitude: null, longitude: null, label: "" });
-              setDirectionsResponse(null);
-            }}
-            placeholder="From"
-          />
-          {sourcesuggestions.length > 0 && (
-            <div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
-              <ul className="divide-y divide-gray-200">
-                {sourcesuggestions.map((place, index) => (
-                  <li
-                    className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
-                    key={index}
-                    onClick={() => {
-                      setSource(place.description);
-                      setsourceId(place.place_id);
-                      setsourceSuggestions([]);
-                    }}
-                  >
-                    {place.description}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-        <div className="relative">
-          <Input
-            value={destination}
-            onChange={(e) => {
-              setDestination(e?.target?.value);
-              handleDestinationSuggestion(e?.target?.value);
-              setdestiLongiLat({ latitude: null, longitude: null, label: "" });
-              setDirectionsResponse(null);
-            }}
-            ref={destinationInputRef}
-            placeholder="To"
-          />
-          <div className="absolute w-full">
-            <ul>
-              {destinationSuggestions.length > 0 && (
-                <div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
-                  <ul className="divide-y divide-gray-200">
-                    {destinationSuggestions.map((place, index) => (
-                      <li
-                        className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
-                        key={index}
-                        onClick={() => {
-                          setDestination(place.description);
-                          setDestinationId(place.place_id);
-                          setDestinationSuggestions([]);
-                        }}
-                      >
-                        {place.description}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </ul>
+      <>
+          <div className="flex bg-[#11184b] px-[80px] py-[40px] flex-row justify-between items-center">
+              <div className="relative">
+                  <Input
+                      value={source}
+                      ref={sourceInputRef}
+                      onChange={(e) => {
+                          setSource(e?.target?.value);
+                          handleSourceSuggestion(e?.target?.value);
+                          setlongiLat({
+                              latitude: null,
+                              longitude: null,
+                              label: "",
+                          });
+                          setDirectionsResponse(null);
+                      }}
+                      placeholder="From"
+                  />
+                  {sourcesuggestions.length > 0 && (
+                      <div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
+                          <ul className="divide-y divide-gray-200">
+                              {sourcesuggestions.map((place, index) => (
+                                  <li
+                                      className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
+                                      key={index}
+                                      onClick={() => {
+                                          setSource(place.description);
+                                          setsourceId(place.place_id);
+                                          setsourceSuggestions([]);
+                                      }}
+                                  >
+                                      {place.description}
+                                  </li>
+                              ))}
+                          </ul>
+                      </div>
+                  )}
+              </div>
+              <div className="relative">
+                  <Input
+                      value={destination}
+                      onChange={(e) => {
+                          setDestination(e?.target?.value);
+                          handleDestinationSuggestion(e?.target?.value);
+                          setdestiLongiLat({
+                              latitude: null,
+                              longitude: null,
+                              label: "",
+                          });
+                          setDirectionsResponse(null);
+                      }}
+                      ref={destinationInputRef}
+                      placeholder="To"
+                  />
+                  <div className="absolute w-full">
+                      <ul>
+                          {destinationSuggestions.length > 0 && (
+                              <div className="absolute max-h-56 overflow-y-auto bg-white z-[100] rounded-md border-2">
+                                  <ul className="divide-y divide-gray-200">
+                                      {destinationSuggestions.map(
+                                          (place, index) => (
+                                              <li
+                                                  className="text-sm p-2.5 cursor-pointer hover:bg-gray-100"
+                                                  key={index}
+                                                  onClick={() => {
+                                                      setDestination(
+                                                          place.description
+                                                      );
+                                                      setDestinationId(
+                                                          place.place_id
+                                                      );
+                                                      setDestinationSuggestions(
+                                                          []
+                                                      );
+                                                  }}
+                                              >
+                                                  {place.description}
+                                              </li>
+                                          )
+                                      )}
+                                  </ul>
+                              </div>
+                          )}
+                      </ul>
+                  </div>
+              </div>
+              <DatePickerDemo setDate2={setDate} />
+              <Input
+                  type="number"
+                  value={passengers}
+                  onChange={(e) => setPassengers(e?.target?.value)}
+                  placeholder="Passengers"
+              />
+              <Button
+                  onClick={() => {
+                      handleOnSearch();
+                  }}
+                  variant="outline"
+              >
+                  Search
+              </Button>
+
+              <Button
+                  onClick={() => {
+                      calculateRoute();
+                      setShowMap(true);
+                  }}
+                  variant="outline"
+              >
+                  Calculate Route
+              </Button>
+
+              <Button
+                  onClick={() => {
+                      clearRoute();
+                  }}
+                  variant="outline"
+              >
+                  Clear
+              </Button>
           </div>
-        </div>
-        <DatePickerDemo setDate2={setDate} />
-        <Input
-          type="number"
-          value={passengers}
-          onChange={(e) => setPassengers(e?.target?.value)}
-          placeholder="Passengers"
-        />
-        <Button
-          onClick={() => {
-            handleOnSearch();
-          }}
-          variant="outline"
-        >
-          Search
-        </Button>
-
-        <Button
-          onClick={() => {
-            calculateRoute();
-          }}
-          variant="outline"
-        >
-          Calculate Route
-        </Button>
-
-        <Button
-          onClick={() => {
-            clearRoute();
-          }}
-          variant="outline"
-        >
-          Clear
-        </Button>
-      </div>
-      <div className="flex bg-[#11184b] text-white justify-center items-center">
-        <div className="w-full flex justify-evenly">
-          <h1 className="text-xl">
-            Distance:{" "}
-            <span className="underline text-2xl font-semibold">{distance}</span>
-          </h1>
-          <h1 className="text-xl">
-            Expected Duration:{" "}
-            <span className="underline text-2xl font-semibold">{duration}</span>
-          </h1>
-        </div>
-      </div>
-      <div className="flex flex-row w-full">
-        <div className="w-[75%]">
+          <div className="flex bg-[#11184b] text-white justify-center items-center">
+              <div className="w-full flex justify-evenly">
+                  <h1 className="text-xl">
+                      Distance:{" "}
+                      <span className="underline text-2xl font-semibold">
+                          {distance}
+                      </span>
+                  </h1>
+                  <h1 className="text-xl">
+                      Expected Duration:{" "}
+                      <span className="underline text-2xl font-semibold">
+                          {duration}
+                      </span>
+                  </h1>
+              </div>
+          </div>
           {rides.map((ride) => (
-            <BookComponent key={ride._id} ride={ride} />
+              <BookComponent key={ride._id} ride={ride} />
           ))}
-        </div>
-        <div className="w-[25%]">
-          {sourceId && destinationId && <MapComponent />}
-        </div>
-      </div>
-      {/* <div className="mt-10">END</div> */}
-    </>
+
+          {showMap && (
+              <div className="w-screen my-16 flex justify-center items-center ">
+                  <MapComponent />
+              </div>
+          )}
+      </>
   );
 };
 
