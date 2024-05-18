@@ -32,7 +32,7 @@ router.get("/search", auth, async (req, res) => {
   try {
     const { sourceId, destinationId, date, seatsRequired } = req.query;
     // Convert the seatsRequired to a number
-    console.log(date);
+ 
     const seats = parseInt(seatsRequired);
     const userId = req.user._id;
     if (seats <= 0 || isNaN(seats)) {
@@ -47,6 +47,7 @@ router.get("/search", auth, async (req, res) => {
         message: "Source and destination cannot be same",
       });
     }
+
     // Find all feasible rides based on the provided criteria
     const feasibleRides = await Published.find({
       sourceId,
@@ -54,7 +55,7 @@ router.get("/search", auth, async (req, res) => {
       date: date,
       numberOfAvailableSeats: { $gte: seats },
       rideBooked: false,
-      driverId: { $ne: userId },
+      // driverId: { $ne: userId },
     }).populate('driverId').populate('vehicleId');
 
     // Send the array of feasible rides as the response
@@ -69,7 +70,7 @@ router.get("/search", auth, async (req, res) => {
       };
       return { ...rideWithoutIds, driver: driverDetails, vehicle: vehicleDetails };
     });
-    console.log(feasibleRidesWithoutIds);
+    
     // Send the array of feasible rides with driver details as the response
     res.status(200).json({
       success: true,
