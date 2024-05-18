@@ -62,7 +62,6 @@ function HomePage() {
 
     const addr = await signer.getAddress();
     updateAddress(addr);
-    updateButton();
     toggleConnect(true);
   }
 
