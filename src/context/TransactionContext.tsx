@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 import { contractABI, contractAddress } from "../utils/constants";
+import { UserContext } from "@/utils/UserProvider";
 const { ethereum } = window;
 const getEthereumContract = () => {
     const provider = new ethers.providers.Web3Provider(ethereum);
@@ -11,24 +12,27 @@ const getEthereumContract = () => {
     return transactionContract;
 }
 
-export const sendTransaction = async () => {
+export const sendTransaction = async (driverWallet:string, userWallet:string) => {
     try {
+        
         if (!ethereum) return alert("Please install MetaMask.");
-
-        const addressTo = "0xcf214706b59a9a329a96bf2042310fc98da88dad"; 
+        // const addressTo = "0x5fA1EFD1552F97b26Ccc939e0CcF5e6F738C9164"; 
+        const addressTo = `${driverWallet}`; 
         const transactionContract = getEthereumContract();
-        const parsedAmount = ethers.utils.parseEther("0.00001");
+        const parsedAmount = ethers.utils.parseEther("0.0000001");
 
         await ethereum.request({
             method: "eth_sendTransaction",
             params: [{
-                from: "0xd9cfd0e4a92ebe4cacc20e6c8532283e7ca7e9af",
+                // from: "0xcf214706B59A9A329a96Bf2042310fc98dA88Dad",
+                from: `${userWallet}`,
                 to: addressTo,
                 gas: "0x5208",
                 value: parsedAmount._hex,
             }]
         });
         const transactionHash = await transactionContract.addToBlockchain(addressTo, parsedAmount, "hello", "123");
+        console.log("Transaction Hash:", transactionHash);
 
     } catch (error) {
         console.log(error);

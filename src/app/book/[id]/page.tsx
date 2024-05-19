@@ -7,6 +7,8 @@ import { FaCar, FaEthereum } from 'react-icons/fa';
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { sendTransaction } from "../../../context/TransactionContext";
+import { UserContext } from "@/utils/UserProvider";
+import { useContext } from "react";
 interface BookingData {
   _id: string;
   sourceId: string;
@@ -28,14 +30,18 @@ interface BookingData {
   updatedAt: string;
   __v: number;
   driver: {
-      firstName: string;
-      lastName: string;
+      firstName: string,
+      lastName: string,
+      username: string,
+      walletAddress: string,
   };
   vehicle: any; // Assuming this can be any type
 }
 
 export default function page({params: {id: bookId}}: {params: {id: string}}) {
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
+  console.log("greg",bookingData)
+  const {userData} = useContext(UserContext);
   const [seatsRequired, setSeatsRequired] = useState<number>(1);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const backendUrl = process.env.NEXT_PUBLIC_URL
@@ -53,27 +59,30 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
   }, [])
 
   // Function to handle form submission
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    sendTransaction();
-    // setIsDisabled(true);
-    // axios.post(`${backendUrl}/book/${bookId}`, {
-    //   seatsRequired
-    // }, {
-    //   headers: {
-    //     Authorization: `Bearer ${localStorage.getItem('token')}`
-    //   }
-    // }).then((res) => {
-    //   console.log(res.data)
-    //   toast.success("Booking Successful, Redirecting to search...");
-    //   setTimeout(() => {
-    //     window.location.href = '/search';
-    //   }, 2000);
-    // }).catch((err) => {
-    //   console.log(err)
-    //   toast.error("Booking Failed");
-    //   setIsDisabled(false);
-    // })
+    
+    await sendTransaction( bookingData.driver.walletAddress,userData.walletAddress)
+
+    setIsDisabled(true);
+    axios.post(`${backendUrl}/book/${bookId}`, {
+      seatsRequired
+     }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+     }).then((res) => {
+      console.log(res.data)
+      toast.success("Booking Successful, Redirecting to search...");
+      setTimeout(() => {
+        window.location.href = '/search';
+      }, 2000);
+     }).catch((err) => {
+      console.log(err)
+      toast.error("Booking Failed");
+      setIsDisabled(false);
+    })
+    
   }
 
   // Function to format date

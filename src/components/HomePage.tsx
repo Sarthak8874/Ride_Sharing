@@ -35,7 +35,7 @@ const words = [
 ];
 
 function HomePage() {
-  const {token, userData} = useContext(UserContext);
+  const {token, userData,setUserData} = useContext(UserContext);
   const [connected, toggleConnect] = useState(false);
   const [currAddress, updateAddress] = useState("No Address Currently");
   async function getAddress() {
@@ -64,6 +64,7 @@ function HomePage() {
 
     const addr = await signer.getAddress();
     updateAddress(addr);
+    setUserData({...userData,walletAddress:addr});
     toggleConnect(true);
     axios.put(`${backendUrl}/user/update-wallet`, {
       walletAddress: addr
