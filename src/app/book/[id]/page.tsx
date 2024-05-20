@@ -63,7 +63,7 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
     e.preventDefault();
     
     await sendTransaction( bookingData.driver.walletAddress,userData.walletAddress)
-
+    
     setIsDisabled(true);
     axios.post(`${backendUrl}/book/${bookId}`, {
       seatsRequired
@@ -75,7 +75,7 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
       console.log(res.data)
       toast.success("Booking Successful, Redirecting to search...");
       setTimeout(() => {
-        window.location.href = '/search';
+        window.location.href = '/';
       }, 2000);
      }).catch((err) => {
       console.log(err)

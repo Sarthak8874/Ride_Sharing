@@ -358,7 +358,7 @@ const page = () => {
                       </ul>
                   </div>
               </div>
-              <DatePickerDemo setDate2={setDate} />
+              <DatePickerDemo  setDate2={setDate} />
               <Input
                   type="number"
                   value={passengers}
