@@ -59,9 +59,9 @@ export default function Navbar() {
             <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="/publish">
               Publish
             </Link>
-            {/* <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="/book">
-              Book Ride
-            </Link> */}
+            <Link className="font-medium flex items-center text-sm transition-colors hover:underline" href="/register/vehicle">
+              Register Vehicle
+            </Link>
           </nav>
           <div className="flex items-center gap-4">
             {token!=="" && <Button onClick={()=>handleLogout()}>Sign Out</Button>}
