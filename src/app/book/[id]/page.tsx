@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { sendTransaction } from "../../../context/TransactionContext";
 import { UserContext } from "@/utils/UserProvider";
 import { useContext } from "react";
+import withAuth from "@/components/withAuth";
 interface BookingData {
   _id: string;
   sourceId: string;
@@ -38,7 +39,7 @@ interface BookingData {
   vehicle: any; // Assuming this can be any type
 }
 
-export default function page({params: {id: bookId}}: {params: {id: string}}) {
+const page = ({params: {id: bookId}}: {params: {id: string}}) => {
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
   console.log("greg",bookingData)
   const {userData} = useContext(UserContext);
@@ -173,3 +174,5 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
     </div>
   )
 }
+
+export default withAuth(page);

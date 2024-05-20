@@ -12,6 +12,7 @@ import { SelectDown } from "@/components/SelectDown";
 import { UserContext } from "@/utils/UserProvider";
 import { toast } from "react-toastify";
 import {  useRouter } from "next/navigation";
+import withAuth from "@/components/withAuth";
 
 interface GeoLocation {
   latitude: number | null;
@@ -401,4 +402,4 @@ const page = () => {
 };
 
 // added
-export default page;
+export default withAuth(page);
