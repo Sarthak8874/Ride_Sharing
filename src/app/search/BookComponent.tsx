@@ -53,7 +53,7 @@ const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
   // Format the result as hh:mm
   const formattedDifference = `${hours}h ${minutes}min`;
   
-
+  
   return (
     <>
       <div className="m-[40px]   border-[#7c7c7c] flex flex-col gap-[30px] h-[200px] rounded-[20px] cursor-pointer py-[20px] px-[10px] shadow-md hover:shadow-lg transition duration-300">
@@ -69,7 +69,7 @@ const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
               </div>
               <div className="flex justify-between items-center gap-[5px]">
                 <IoStar />
-                <span>4.8</span>
+                <span className="w-full text-left">4.8</span>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
             </div>
             <div className="flex flex-col items-center justify-between">
               <div>{ride.sourceName}</div>
-              <div>{ride.destinationName}</div>
+              <div className="text-left w-full">{ride.destinationName}</div>
             </div>
           </div>
           <Button variant="outline" onClick={(e) => handleSubmit(e, ride._id)}>
