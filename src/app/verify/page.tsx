@@ -1,5 +1,6 @@
 import AdminPortal from '@/components/AdminPortal'
 import MultiTabs from '@/components/MultiTabs'
+import withAuth from '@/components/withAuth'
 import React from 'react'
 
 function page() {
@@ -11,4 +12,4 @@ function page() {
   )
 }
 
-export default page
+export default withAuth(page)

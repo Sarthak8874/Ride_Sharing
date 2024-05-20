@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/inputA";
 import { DatePickerDemo } from "../../components/Datepicker";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import withAuth from "@/components/withAuth";
 
 import BookComponent from "./BookComponent";
 import { UserContext } from "@/utils/UserProvider";
@@ -422,4 +423,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default withAuth(page);

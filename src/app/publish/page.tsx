@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import {  useRouter } from "next/navigation";
 import MapComponent from "@/components/MapComponent";
 import { publishTransaction } from "@/context/TransactionContext";
+import withAuth from "@/components/withAuth";
 
 interface GeoLocation {
   latitude: number | null;
@@ -420,4 +421,4 @@ const page = () => {
 };
 
 // added
-export default page;
+export default withAuth(page);
