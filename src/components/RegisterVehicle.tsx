@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Label } from "@/components/ui/label";
 // import { Label } from "../ui/label";
 import { Input } from "@/components/ui/inputA";
@@ -12,12 +12,16 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
+import { registerTransaction } from "@/context/TransactionContext";
+import { UserContext } from "@/utils/UserProvider";
 
 export function RegisterVehicle() {
     const [loading,setloading] = useState<boolean>(false);
+    const {userData} = useContext(UserContext);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         setloading(true);
+        await registerTransaction(userData.walletAddress);
         e.preventDefault();
 		console.log("FOO", formData);
         axios

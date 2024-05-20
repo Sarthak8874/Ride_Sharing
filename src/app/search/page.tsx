@@ -368,20 +368,12 @@ const page = () => {
         <Button
           onClick={() => {
             handleOnSearch();
-          }}
-          variant="outline"
-        >
-          Search
-        </Button>
-
-        <Button
-          onClick={() => {
             calculateRoute();
             setShowMap(true);
           }}
           variant="outline"
         >
-          Calculate Route
+          Search
         </Button>
 
         <Button
@@ -413,7 +405,7 @@ const page = () => {
 
       {showMap && (
         <div className="w-screen my-16 flex justify-center items-center ">
-          <MapComponent />
+          <MapComponent width='900px' height='600px' />
         </div>
       )}
     </>

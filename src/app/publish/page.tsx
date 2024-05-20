@@ -181,13 +181,65 @@ const page = () => {
   };
 
   useEffect(() => {
+    const getlongiLat = (input: string) => {
+      axios
+        .get(
+          `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${input}&key=${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}`
+        )
+        .then((res) => {
+          if (res?.data) {
+            setlongiLat({
+              latitude: res.data.result.geometry.location.lat,
+              longitude: res.data.result.geometry.location.lng,
+              label: res.data.result.name,
+            });
+          } else {
+            console.error("Invalid or unexpected response format");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching destination data:", error);
+        });
+    };
+
+    const getdestiLongiLat = (input: string) => {
+      axios
+        .get(
+          `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${input}&key=${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}`
+        )
+        .then((res) => {
+          if (res?.data) {
+            setdestiLongiLat({
+              latitude: res.data.result.geometry.location.lat,
+              longitude: res.data.result.geometry.location.lng,
+              label: res.data.result.name,
+            });
+          } else {
+            console.error("Invalid or unexpected response format");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching destination data:", error);
+        });
+    };
+
+    if (sourceId) {
+      getlongiLat(sourceId);
+    }
+
+    if (destinationId) {
+      getdestiLongiLat(destinationId);
+    }
+  }, [sourceId, destinationId]);
+
+  useEffect(() => {
     // Add event listener on document mount
     document.addEventListener("click", handleClickOutside);
 
     // Cleanup function on unmount
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-  const {token,userData} = React.useContext(UserContext);
+  const {token,userData,setlongiLat,setdestiLongiLat} = React.useContext(UserContext);
   const router = useRouter();
   const handleOnPublish = async () => {
     try {
@@ -269,6 +321,11 @@ const page = () => {
                 ref={sourceInputRef}
                 onChange={(e) => {
                   setSource(e?.target?.value);
+                  setlongiLat({
+                    latitude: null,
+                    longitude: null,
+                    label: "",
+                  });
                   handleSourceSuggestion(e?.target?.value);
                 }}
                 required
@@ -299,6 +356,11 @@ const page = () => {
                 onChange={(e) => {
                   setDestination(e?.target?.value);
                   handleDestinationSuggestion(e?.target?.value);
+                  setdestiLongiLat({
+                    latitude: null,
+                    longitude: null,
+                    label: "",
+                  });
                 }}
                 ref={destinationInputRef}
                 required
@@ -410,7 +472,7 @@ const page = () => {
           </div>
 
           <div className="relative ">
-            <MapComponent/>
+            <MapComponent width='600px' height='500px' />
           </div>
 
         </div>

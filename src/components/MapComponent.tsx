@@ -5,15 +5,18 @@ import { UserContext } from '@/utils/UserProvider';
 // Define the styles for the map container
 
 
-interface MyComponentProps {}
+interface MyComponentProps {
+  width: string;
+  height: string;
+}
 
-const MapComponent: React.FC<MyComponentProps> = () => {
+const MapComponent: React.FC<MyComponentProps> = ({width,height}) => {
   const { longiLat, destiLongiLat,directionsResponse } = React.useContext(UserContext);
   const [center, setCenter] = useState({ lat: -3.745, lng: -38.523 });
 
   const containerStyle = {
-    width: '900px',
-    height: '600px'
+    width: `${width}`,
+    height: `${height}`
   };
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
