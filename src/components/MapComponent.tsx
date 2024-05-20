@@ -3,10 +3,7 @@ import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer } from '@react-go
 import { UserContext } from '@/utils/UserProvider';
 
 // Define the styles for the map container
-const containerStyle = {
-  width: '900px',
-  height: '600px'
-};
+
 
 interface MyComponentProps {}
 
@@ -14,6 +11,10 @@ const MapComponent: React.FC<MyComponentProps> = () => {
   const { longiLat, destiLongiLat,directionsResponse } = React.useContext(UserContext);
   const [center, setCenter] = useState({ lat: -3.745, lng: -38.523 });
 
+  const containerStyle = {
+    width: '900px',
+    height: '600px'
+  };
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: `${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}` 
