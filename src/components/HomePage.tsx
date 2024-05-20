@@ -85,8 +85,16 @@ function HomePage() {
         updateAddress(userData.walletAddress);
         toggleConnect(true);
       }
+      else{
+        updateAddress("No Address Currently");
+        toggleConnect(false);
+      }
     }
-  }, []);
+    else{
+      updateAddress("No Address Currently");
+      toggleConnect(false);
+    }
+  }, [userData,token]);
 
   
 
