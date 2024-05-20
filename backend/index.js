@@ -8,12 +8,20 @@ const bookingRoute = require("./routes/Booking");
 require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 
+app.listen(PORT,(req,res)=>{
+  console.log(`App started @ ${PORT}`);
+})
+
 app.use(cors());
 app.use(express.json());
+const fileUpload = require("express-fileupload");
+app.use(
+	fileUpload({
+		useTempFiles: true,
+		tempFileDir: "/tmp/",
+	})
+);
 
-app.listen(PORT,(req,res)=>{
-    console.log(`App started @ ${PORT}`);
-})
 
 cloudinary.config({ 
   cloud_name: 'dpftc2sdu', 

@@ -42,7 +42,7 @@ export const sendTransaction = async (driverWallet:string, userWallet:string) =>
 };
 
 
-export const publishTransaction = async ( ) => {
+export const publishTransaction = async ( userWallet:string) => {
     try {
         
         if (!ethereum) return alert("Please install MetaMask.");
@@ -54,8 +54,8 @@ export const publishTransaction = async ( ) => {
         await ethereum.request({
             method: "eth_sendTransaction",
             params: [{
-                from: "0xcf214706B59A9A329a96Bf2042310fc98dA88Dad",
-                // from: `${userWallet}`,
+                // from: "0xcf214706B59A9A329a96Bf2042310fc98dA88Dad",
+                from: `${userWallet}`,
                 to: addressTo,
                 gas: "0x5208",
                 value: parsedAmount._hex,
