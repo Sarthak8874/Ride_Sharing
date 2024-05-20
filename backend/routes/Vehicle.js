@@ -20,7 +20,6 @@ VehiRouter.post("/register", async (req, res) => {
         } = req.body;
         
         console.log(req.body);
-
         
         async function uploadImage(imagePath,folderName) {
             try {
@@ -35,9 +34,9 @@ VehiRouter.post("/register", async (req, res) => {
             }
         }
 
-        const vehicleImage = await uploadImage(vehicleImg,"vehicleImg");
-        const ownerIdProof = await uploadImage(idProof,"IdProof");
-        const vehicleRC = await uploadImage(vehicleRc,"vehicleRc");
+        const vehicleImage = await uploadImage(req.files.vehicleImg.tempFilePath,"vehicleImg");
+        const ownerIdProof = await uploadImage(req.files.idProof.tempFilePath,"IdProof");
+        const vehicleRC = await uploadImage(req.files.vehicleRc.tempFilePath,"vehicleRc");
 
         console.log(vehicleImage);
 

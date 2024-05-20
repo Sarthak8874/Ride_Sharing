@@ -187,11 +187,11 @@ const page = () => {
     // Cleanup function on unmount
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-  const {token} = React.useContext(UserContext);
+  const {token,userData} = React.useContext(UserContext);
   const router = useRouter();
   const handleOnPublish = async () => {
     try {
-     await publishTransaction();
+     await publishTransaction(userData.walletAddress);
      await  axios
         .get("https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json", {
           params: {
