@@ -101,20 +101,7 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
     return formattedDate;
   };
   // const { sendTransaction} = React.useContext(TransactionContext);
-  function extractTimeFromTimestamp(timestamp:string) {
-    // Create a Date object from the timestamp
-    const date = new Date(timestamp);
-    
-    // Extract hours, minutes, and seconds
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-    const seconds = String(date.getUTCSeconds()).padStart(2, '0');
-    
-    // Format the time as HH:MM:SS
-    const time = `${hours}:${minutes}:${seconds}`;
-    
-    return time;
-}
+
 
   return (
     <div className='w-screen flex items-center flex-col mt-10 overflow-x-hidden '>
@@ -125,7 +112,7 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
         <div className="flex justify-between mx-6 my-6">
           <div className="">
             <p>{bookingData.sourceName}</p>
-            <p>{extractTimeFromTimestamp(bookingData.startTime)}</p>
+            <p>{bookingData.startTime}</p>
           </div>
           <div className="flex flex-col items-center">
             <FaCar/>
@@ -133,7 +120,7 @@ export default function page({params: {id: bookId}}: {params: {id: string}}) {
           </div>
           <div className="">
             <p>{bookingData.destinationName}</p>
-            <p>{extractTimeFromTimestamp(bookingData.endTime)}</p>
+            <p>{bookingData.endTime}</p>
           </div>
         </div>
         <div className="h-[10px] rounded-2xl bg-gray-200 my-6"></div>
