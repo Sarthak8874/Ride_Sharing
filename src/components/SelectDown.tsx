@@ -15,7 +15,7 @@ export function SelectDown({ data, setVehicleId }: { data: any; setVehicleId: an
     <Select onValueChange={(value) => {
       setVehicleId(value);
     }}>
-      <SelectTrigger className="w-[180px] bg-white">
+      <SelectTrigger className="w-[440px]  bg-white">
         <SelectValue placeholder="Select Vehicle" />
       </SelectTrigger>
       <SelectContent className="bg-white">

@@ -128,8 +128,7 @@ function HomePage() {
             Sometimes, you just need to see it.
           </TextRevealCardTitle>
           <TextRevealCardDescription>
-            This is a text reveal card. Hover over the card to reveal the hidden
-            text.
+            Hover to see your wallet address
           </TextRevealCardDescription>
         </TextRevealCard>
       </div>
