@@ -65,6 +65,9 @@
       --ring: 240 4.9% 83.9%;
     }
   }
+  .calenderClass{
+    width:280px;
+  }
   .w-full .calenderClass{
     width: 440px;
   }
