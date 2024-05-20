@@ -16,7 +16,7 @@ const vehicleSchema = new mongoose.Schema({
     },
     ownerIdProof: {
         type: String,
-        required: true
+        required: false
     },
 
     vehicleModel: {
