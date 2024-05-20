@@ -5,6 +5,7 @@ const { error } = require("console");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const Transactions = require("../models/Transactions");
+const axios = require("axios");
 
 // Publish a new ride
 router.post("/publish", auth, async (req, res) => {
@@ -29,14 +30,22 @@ router.post("/publish", auth, async (req, res) => {
 const getDistance = async (sourceId, destinationId) => {
   const apiKey = "AIzaSyDx5GRB6r2aS6ICayTDxpIX4wO71c4FniY"; // Replace with your actual API key
   const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:${sourceId}&destinations=place_id:${destinationId}&key=${apiKey}`;
-
   try {
-    const response = await axios.get(url);
-    const distance = response.data.rows[0].elements[0].distance.value; // distance in meters
-    // console.log(distance);
-    return distance; // convert to kilometers
+    const response = await axios.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Origin': 'http://localhost' // Adjust as necessary
+      }
+    });
+    if (response.data.status === 'OK') {
+      const distance = response.data.rows[0].elements[0].distance.value; // distance in meters
+      return distance / 1000; // convert to kilometers
+    } else {
+      console.error('Error from Google API:', response.data.error_message);
+      return null;
+    }
   } catch (error) {
-    // console.error('Error fetching distance from Google API:', error);
+    console.error('Error fetching distance from Google API:', error);
     return null;
   }
 };
@@ -44,6 +53,7 @@ const getDistance = async (sourceId, destinationId) => {
 // Get feasible rides as per the search criteria
 router.get("/search", auth, async (req, res) => {
   try {
+    
     const { sourceId, destinationId, date, seatsRequired } = req.query;
     const seats = parseInt(seatsRequired);
     const userId = req.user._id;
@@ -75,7 +85,7 @@ router.get("/search", auth, async (req, res) => {
     feasibleRides = feasibleRides.filter(
       (ride) => ride.destinationId === destinationId
     );
-
+    
     // Filter rides based on distance between sourceId and destinationId
     const filteredRidesWithDistance = [];
     for (const ride of feasibleRides) {
@@ -87,7 +97,7 @@ router.get("/search", auth, async (req, res) => {
 
     // Sort rides by distance
     filteredRidesWithDistance.sort((a, b) => a.distance - b.distance);
-
+    console.log(filteredRidesWithDistance);
     // Map and prepare the response data
     const feasibleRidesWithoutIds = filteredRidesWithDistance.map(
       ({ ride }) => {
