@@ -113,7 +113,7 @@ const page = ({params: {id: bookId}}: {params: {id: string}}) => {
         <div className="flex justify-between mx-6 my-6">
           <div className="">
             <p>{bookingData.sourceName}</p>
-            <p>{bookingData.startTime}</p>
+            {/* <p>{bookingData.startTime}</p> */}
           </div>
           <div className="flex flex-col items-center">
             <FaCar/>
@@ -121,7 +121,7 @@ const page = ({params: {id: bookId}}: {params: {id: string}}) => {
           </div>
           <div className="">
             <p>{bookingData.destinationName}</p>
-            <p>{bookingData.endTime}</p>
+            {/* <p>{bookingData.endTime}</p> */}
           </div>
         </div>
         <div className="h-[10px] rounded-2xl bg-gray-200 my-6"></div>
