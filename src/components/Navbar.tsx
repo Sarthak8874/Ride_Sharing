@@ -36,6 +36,8 @@ export default function Navbar() {
       updateToken("");
       setUserData(null);
       router.push('/');
+      // reload the page
+      window.location.reload();
    }
   }
 
