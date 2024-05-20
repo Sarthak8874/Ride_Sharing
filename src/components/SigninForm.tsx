@@ -33,7 +33,7 @@ export function SigninForm() {
         autoClose: 2000
       });
     }).catch((err) => {
-      toast.error(err.response.data.message, {
+      toast.error(err.response?.data?.message, {
         autoClose: 2000
       });
     });
