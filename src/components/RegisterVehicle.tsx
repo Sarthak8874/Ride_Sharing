@@ -11,9 +11,13 @@ import {
 } from "@tabler/icons-react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Spinner from "./Spinner";
 
 export function RegisterVehicle() {
+    const [loading,setloading] = useState<boolean>(false);
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        setloading(true);
         e.preventDefault();
 		console.log("FOO", formData);
         axios
@@ -26,10 +30,12 @@ export function RegisterVehicle() {
             .then((res) => {
                 console.log(res.data);
                 toast.success("Registered Successfully");
+                setloading(false);
             })
             .catch((e) => {
                 console.log(e);
                 toast.error("Registration Failed");
+                setloading(false);
             });
     };
 
@@ -61,7 +67,14 @@ export function RegisterVehicle() {
         }));
     };
 
+    if(loading){
+       return (<div>
+        <Spinner/>
+    </div>) ;
+    }
+
     return (
+        
         <div className="sm:h-auto  w-full min-h-[100vh] md:h-[100vh] flex justify-center items-center mx-auto ">
             <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
                 <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
