@@ -175,4 +175,4 @@ const page = ({params: {id: bookId}}: {params: {id: string}}) => {
   )
 }
 
-export default withAuth(page);
+export default page;

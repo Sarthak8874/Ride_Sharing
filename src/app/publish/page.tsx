@@ -483,4 +483,4 @@ const page = () => {
 };
 
 // added
-export default withAuth(page);
+export default page;
