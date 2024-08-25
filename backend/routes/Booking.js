@@ -28,7 +28,7 @@ router.post("/publish", auth, async (req, res) => {
 });
 
 const getDistance = async (sourceId, destinationId) => {
-  const apiKey = "AIzaSyDx5GRB6r2aS6ICayTDxpIX4wO71c4FniY"; // Replace with your actual API key
+  const apiKey = process.env.GOOGLE_API_KEY; // Replace with your actual API key
   const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:${sourceId}&destinations=place_id:${destinationId}&key=${apiKey}`;
   try {
     const response = await axios.get(url, {
