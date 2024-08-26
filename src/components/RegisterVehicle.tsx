@@ -21,7 +21,7 @@ export function RegisterVehicle() {
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         setloading(true);
-        await registerTransaction(userData.walletAddress);
+        // await registerTransaction(userData.walletAddress);
         e.preventDefault();
 		console.log("FOO", formData);
         axios
@@ -41,6 +41,16 @@ export function RegisterVehicle() {
                 toast.error("Registration Failed");
                 setloading(false);
             });
+            
+        setFormData({
+            username: "",
+            name: "Temp",
+            vehicleNumber: "",
+            vehicleImg: null,
+            idProof: null,
+            vehicleModel: "Maruti",
+            vehicleRc: null,
+        });
     };
 
 	const [formData, setFormData] = useState({

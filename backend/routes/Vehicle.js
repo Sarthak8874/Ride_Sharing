@@ -2,9 +2,21 @@ const express = require("express");
 const VehiRouter = express.Router();
 const Vehicle = require("../models/Vehicle");
 const User = require("../models/User");
+require("dotenv").config();
 
-const cloudinary = require("cloudinary").v2;
 
+const PinataSDK = require('@pinata/sdk'); 
+
+const fs = require("fs");
+const pinata = new PinataSDK({
+    pinataApiKey: process.env.PINATA_API_KEY,
+    pinataSecretApiKey: process.env.PINATA_SECRET_KEY,
+    pinataJwt: process.env.PINATA_JWT,
+    pinataGateway: process.env.PINATA_GATEWAY_URL,
+  });
+
+
+  
 //vehicle registration
 VehiRouter.post("/register", async (req, res) => {
     try {
@@ -20,26 +32,46 @@ VehiRouter.post("/register", async (req, res) => {
         } = req.body;
         
         console.log(req.body);
-        
-        async function uploadImage(imagePath,folderName) {
+
+        async function uploadImage(filePath,fileName) {
             try {
-                if(imagePath==null) return "null";
-                const result = await cloudinary.uploader.upload(imagePath, {
-                    unique_filename: true,
-                    folder: folderName,
-                });
-                return result.secure_url;
+                if (!filePath) return null;
+                console.log(filePath);
+
+                const res = await pinata.testAuthentication()
+                console.log("Pinata Connection: ",res);
+        
+                const readableStreamForFile = fs.createReadStream(filePath);
+                const options = {
+                    pinataMetadata: {
+                        name: `${fileName}-${Math.random()}-${Date.now()}`,
+                        keyvalues: {
+                            folder: fileName
+                        }
+                    },
+                    pinataOptions: {
+                        cidVersion: 0
+                    }
+                };
+                const result = await pinata.pinFileToIPFS(readableStreamForFile, options);
+                console.log(result);
+                return result.IpfsHash;
             } catch (error) {
-                throw new Error(error);
+                console.error('Error uploading to Pinata:', error.message);
+                throw new Error('Failed to upload image');
             }
         }
+        
+        //Proof( by pinata): https://orange-general-muskox-149.mypinata.cloud/ipfs/QmcZ7nXYRRcnnxA3mVyg3CJeX437dqG8yDBUDjKkzSXz4s
 
-        const vehicleImage = await uploadImage(req.files.vehicleImg.tempFilePath,"vehicleImg");
-        const ownerIdProof = await uploadImage(req.files.idProof.tempFilePath,"IdProof");
-        const vehicleRC = await uploadImage(req.files.vehicleRc.tempFilePath,"vehicleRc");
+        //Global (public IPFS Gateway) : https://ipfs.io/ipfs/QmcZ7nXYRRcnnxA3mVyg3CJeX437dqG8yDBUDjKkzSXz4s
 
-        console.log(vehicleImage);
 
+
+        const vehicleImage = await uploadImage(req?.files?.vehicleImg?.tempFilePath,"vehicleImg");
+        const ownerIdProof = await uploadImage(req?.files?.idProof?.tempFilePath,"IdProof");
+        const vehicleRC = await uploadImage(req?.files?.vehicleRc?.tempFilePath,"vehicleRc");
+ 
         const veh = await Vehicle.create({
             ownerUsername: username,
             ownerName: name,
@@ -77,7 +109,7 @@ VehiRouter.post("/register", async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Vehicle Registration Failed",
-            error: e,
+            error: e.message,
         });
     }
 });
