@@ -78,7 +78,7 @@ export const registerTransaction = async ( userWallet:string) => {
         const addressTo = "0x5fA1EFD1552F97b26Ccc939e0CcF5e6F738C9164"; 
         // const addressTo = `${driverWallet}`; 
         const transactionContract = getEthereumContract();
-        const parsedAmount = ethers.utils.parseEther("0.0000001");
+        const parsedAmount = ethers.utils.parseEther("0.000005");
 
         await ethereum.request({
             method: "eth_sendTransaction",

@@ -21,7 +21,16 @@ export function RegisterVehicle() {
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         setloading(true);
-        // await registerTransaction(userData.walletAddress);
+        try {
+            await registerTransaction(userData.walletAddress);
+        }
+        catch(e)
+        {
+            console.log("Error in Transaction : ",e);
+            setloading(false);
+            return;
+        } 
+        
         e.preventDefault();
 		console.log("FOO", formData);
         axios
