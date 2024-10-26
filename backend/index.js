@@ -22,14 +22,6 @@ app.use(
 	})
 );
 
-
-cloudinary.config({ 
-  cloud_name: 'dpftc2sdu', 
-  api_key:  process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_API_SECRET 
-});
-console.log(cloudinary.config());
-
 app.use("/api/v1",routes);
 
 dbConnect();

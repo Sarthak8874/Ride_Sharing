@@ -4,7 +4,6 @@ import { UserContext } from '@/utils/UserProvider';
 
 // Define the styles for the map container
 
-
 interface MyComponentProps {
   width: string;
   height: string;

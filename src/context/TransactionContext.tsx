@@ -41,6 +41,15 @@ export const sendTransaction = async (driverWallet:string, userWallet:string) =>
     }
 };
 
+function getRandomEtherAmount(min: number, max: number) {
+    // Generate a random number between the given min and max range
+    const randomAmount = (Math.random() * (max - min) + min).toFixed(8); // Keeping precision up to 8 decimal places
+    return (randomAmount);
+  }
+  
+  // Define the range
+  const minAmount = 0.00060;
+  const maxAmount=0.00061;
 
 export const publishTransaction = async ( userWallet:string) => {
     try {
@@ -49,7 +58,7 @@ export const publishTransaction = async ( userWallet:string) => {
         const addressTo = "0x5fA1EFD1552F97b26Ccc939e0CcF5e6F738C9164"; 
         // const addressTo = `${driverWallet}`; 
         const transactionContract = getEthereumContract();
-        const parsedAmount = ethers.utils.parseEther("0.0000001");
+        const parsedAmount = ethers.utils.parseEther("0.000005");
 
         await ethereum.request({
             method: "eth_sendTransaction",
@@ -78,7 +87,7 @@ export const registerTransaction = async ( userWallet:string) => {
         const addressTo = "0x5fA1EFD1552F97b26Ccc939e0CcF5e6F738C9164"; 
         // const addressTo = `${driverWallet}`; 
         const transactionContract = getEthereumContract();
-        const parsedAmount = ethers.utils.parseEther("0.0000001");
+        const parsedAmount = ethers.utils.parseEther(getRandomEtherAmount(minAmount, maxAmount).toString());
 
         await ethereum.request({
             method: "eth_sendTransaction",

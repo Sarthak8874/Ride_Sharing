@@ -63,8 +63,9 @@ const page = ({params: {id: bookId}}: {params: {id: string}}) => {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     
-    await sendTransaction( bookingData.driver.walletAddress,userData.walletAddress)
-    
+    if (bookingData && bookingData.driver) {
+      await sendTransaction(bookingData.driver.walletAddress, userData.walletAddress);
+    }
     setIsDisabled(true);
     axios.post(`${backendUrl}/book/${bookId}`, {
       seatsRequired
