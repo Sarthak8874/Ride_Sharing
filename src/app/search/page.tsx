@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useContext, useEffect } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import { Input } from "@/components/ui/inputA";
 import { DatePickerDemo } from "../../components/Datepicker";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import BookComponent from "./BookComponent";
 import { UserContext } from "@/utils/UserProvider";
 import MapComponent from "@/components/MapComponent";
 import Spinner from "@/components/Spinner";
+import { useSearchRide } from "../../utils/Blockchain/searchRide/useSearchRide.js";
 
 interface GeoLocation {
   latitude: number | null;
@@ -56,7 +57,12 @@ const page = () => {
   const [showMap, setShowMap] = React.useState<boolean>(true);
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
+
+  const { searchRide } = useSearchRide();
+
+  // const [ridesArr, setRidesArray] = React.useState<any[]>([]);
   useEffect(() => {
+    searchRide();
     const getLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -277,7 +283,11 @@ const page = () => {
       });
   };
   if (isLoading) {
-    return <div><Spinner/></div>;
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
   return (
     <>
@@ -405,7 +415,7 @@ const page = () => {
 
       {showMap && (
         <div className="w-screen my-16 flex justify-center items-center ">
-          <MapComponent width='900px' height='600px' />
+          <MapComponent width="900px" height="600px" />
         </div>
       )}
     </>

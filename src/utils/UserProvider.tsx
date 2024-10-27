@@ -6,13 +6,15 @@ interface UserContextType {
   token: string;
   vehicles: any;
   longiLat: GeoLocation;
-  destiLongiLat:GeoLocation;
+  destiLongiLat: GeoLocation;
   directionsResponse: google.maps.DirectionsResult | null;
   distance: string;
   duration: string;
   setDistance: (distance: string) => void;
   setDuration: (duration: string) => void;
-  setDirectionsResponse: (directionsResponse: google.maps.DirectionsResult | null) => void;
+  setDirectionsResponse: (
+    directionsResponse: google.maps.DirectionsResult | null
+  ) => void;
   setdestiLongiLat: (geoLocation: GeoLocation) => void;
   setlongiLat: (geoLocation: GeoLocation) => void;
   setVehicles: (vehicles: any) => void;
@@ -31,11 +33,11 @@ interface GeoLocation {
 // Create the context with the defined type
 export const UserContext = createContext<UserContextType>({
   token: "",
-  longiLat: { latitude: null, longitude: null, label: ""},
-  destiLongiLat: { latitude: null, longitude: null, label: ""},
+  longiLat: { latitude: null, longitude: null, label: "" },
+  destiLongiLat: { latitude: null, longitude: null, label: "" },
   directionsResponse: null,
-  distance: '',
-  duration: '',
+  distance: "",
+  duration: "",
   setDistance: () => {},
   setDuration: () => {},
   setDirectionsResponse: () => {},
@@ -61,8 +63,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     try {
       const response = await axios.get(`${backendUrl}/user/profile`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       // If the request is successful and returns data, the token is valid
       if (response.data) {
@@ -73,7 +75,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       }
     } catch (error) {
       // If there's an error (e.g., network error, server error), the token is invalid
-      console.error('Error validating token:', error);
+      console.error("Error validating token:", error);
       return false;
     }
   }
@@ -88,8 +90,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         if (isValid) {
           setToken(tokenFromStorage);
         } else {
-            localStorage.removeItem("token");
-            setToken("");
+          localStorage.removeItem("token");
+          setToken("");
         }
       });
     }
@@ -103,7 +105,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   // let username = "";
   //   if (userDataString !== null) {
   //       const userData = JSON.parse(userDataString);
-  //        username = userData.username; 
+  //        username = userData.username;
   //   } else {
   //     console.error("User data not found in localStorage");
   //   }
@@ -112,35 +114,32 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [longiLat, setlongiLat] = useState<GeoLocation>({
     latitude: null,
     longitude: null,
-    label:"",
+    label: "",
   });
 
   const [destiLongiLat, setdestiLongiLat] = useState<GeoLocation>({
     latitude: null,
     longitude: null,
-    label:"",
+    label: "",
   });
 
   //route calculation
 
-  const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
-  const [distance, setDistance] = useState<string>('');
-  const [duration, setDuration] = useState<string>('');
-
-
+  const [directionsResponse, setDirectionsResponse] =
+    useState<google.maps.DirectionsResult | null>(null);
+  const [distance, setDistance] = useState<string>("");
+  const [duration, setDuration] = useState<string>("");
 
   async function fetchVehicles() {
     try {
       const response = await axios.get(`${backendUrl}/vehicle/all`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-      );
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setVehicles(response.data.data);
-    }
-    catch (error) {
-      console.error('Error fetching vehicles:', error);
+    } catch (error) {
+      console.error("Error fetching vehicles:", error);
     }
   }
 
@@ -150,14 +149,30 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   };
   const updateUserData = (newUserData: any) => {
     setUserData(newUserData);
-  }
-
-
+  };
 
   // Provide the token and updateToken function to the context
   return (
-    <UserContext.Provider value={{ token, updateToken, userData, setUserData, vehicles, setVehicles, fetchVehicles,longiLat, setlongiLat, destiLongiLat, setdestiLongiLat, 
-      directionsResponse, distance, duration, setDistance,setDuration, setDirectionsResponse}}
+    <UserContext.Provider
+      value={{
+        token,
+        updateToken,
+        userData,
+        setUserData,
+        vehicles,
+        setVehicles,
+        fetchVehicles,
+        longiLat,
+        setlongiLat,
+        destiLongiLat,
+        setdestiLongiLat,
+        directionsResponse,
+        distance,
+        duration,
+        setDistance,
+        setDuration,
+        setDirectionsResponse,
+      }}
     >
       {children}
     </UserContext.Provider>

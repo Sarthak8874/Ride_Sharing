@@ -1,10 +1,10 @@
 "use client";
 // import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import  Navbar  from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import "./globals.css";
 // import { ToastContainer } from 'react-toastify';
-import {ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { UserProvider } from "@/utils/UserProvider";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,14 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <UserProvider>
-          
-      <ToastContainer position="top-right" />
-        <Navbar />
-        {children}
+          <ToastContainer position="top-right" />
+          <Navbar />
+          {children}
         </UserProvider>
       </body>
     </html>
   );
 }
-
-
