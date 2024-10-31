@@ -6,13 +6,12 @@ import { cn } from "@/utils/cn";
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import { UserContext } from "@/utils/UserProvider";
+import { useVehicleRegistration } from "../utils/Blockchain/vehicalRegistration/useVehicalRegistraion";
 import { uploadToIPFS } from "../utils/Blockchain/vehicalRegistration/uploadToIPFS";
-import { useVehicalRegistration } from "../utils/Blockchain/vehicalRegistration/useVehicalRegistraion";
-
 export function RegisterVehicle() {
   const [loading, setLoading] = useState<boolean>(false);
   const { userData } = useContext(UserContext);
-  const { registerVehicle } = useVehicalRegistration();
+  const { registerVehicle } = useVehicleRegistration();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -46,10 +45,12 @@ export function RegisterVehicle() {
       const vehicleImgHash = await uploadToIPFS(formData.vehicleImg);
       const idProofHash = await uploadToIPFS(formData.idProof);
       const vehicleRcHash = await uploadToIPFS(formData.vehicleRc);
+
       console.log("Vehical Images hash : ", vehicleImgHash);
+      console.log("ID Proof : ", idProofHash);
+      console.log("Vehicle Rc Hash", vehicleRcHash);
 
       await registerVehicle(
-        userData.walletAddress,
         formData.username,
         formData.vehicleNumber,
         vehicleImgHash,
@@ -63,7 +64,6 @@ export function RegisterVehicle() {
       toast.error("Blockchain Registration Failed");
     } finally {
       setLoading(false);
-      // Reset form data after submission
       setFormData({
         username: "",
         vehicleNumber: "",

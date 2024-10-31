@@ -1,13 +1,12 @@
-import React from 'react'
-import SigninForm from '@/components/SigninForm'
-
+import React from "react";
+import SigninForm from "@/components/SigninForm";
 
 function page() {
   return (
     <div>
-        <SigninForm/>
+      <SigninForm />
     </div>
-  )
+  );
 }
 
-export default page
+export default page;

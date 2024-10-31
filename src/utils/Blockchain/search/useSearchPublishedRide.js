@@ -2,16 +2,18 @@ import { useState, useEffect } from "react";
 import { readContractInstance } from "../readContractInstance";
 
 const useSearchRide = () => {
-  const [Rides, setRides] = useState([]);
+  const [rides, setRides] = useState([]);
 
-  const searchRide = async () => {
+  const fetchRides = async () => {
     try {
-      const ridesLength = await readContractInstance.getRidesCount();
+      const ridesLength = await readContractInstance.getPublishedVehicleCount();
+      console.log("Rides length: ", ridesLength);
+
       const ridesArray = [];
 
       for (let i = 0; i < ridesLength; i++) {
-        const ride = await readContractInstance.rides(i);
-        console.log("Ride at index", i, ":", ride);
+        const ride = await readContractInstance.publishedVehicles(i);
+        console.log(ride);
         ridesArray.push(ride);
       }
       return ridesArray;
@@ -23,14 +25,14 @@ const useSearchRide = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const ridesData = await searchRide();
+      const ridesData = await fetchRides();
       setRides(ridesData);
     };
 
     fetchData();
   }, []);
 
-  return { Rides, searchRide };
+  return { rides, fetchRides };
 };
 
 export { useSearchRide };

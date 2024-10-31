@@ -2,13 +2,8 @@ import { abi } from "./abi";
 import { contractAddress } from "./contractAddress";
 import { ethers } from "ethers";
 
-const infuraProvider = new ethers.BrowserProvider(window.ethereum);
-const signer = infuraProvider.getSigner();
-export const writeContractInstance = new ethers.Contract(
-  contractAddress,
-  abi,
-  signer
-);
-
-// const gasPrice = await walletProvider.send("eth_gasPrice", []);
+const provider = new ethers.BrowserProvider(window.ethereum);
+const signer = provider.getSigner();
+const writeContractInstance = new ethers.Contract(contractAddress, abi, signer);
 console.log(writeContractInstance);
+export { writeContractInstance };

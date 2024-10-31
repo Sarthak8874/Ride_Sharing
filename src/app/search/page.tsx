@@ -11,8 +11,8 @@ import BookComponent from "./BookComponent";
 import { UserContext } from "@/utils/UserProvider";
 import MapComponent from "@/components/MapComponent";
 import Spinner from "@/components/Spinner";
-import { useSearchRide } from "../../utils/Blockchain/searchRide/useSearchRide.js";
-
+import { useSearchRide } from "../../utils/Blockchain/search/useSearchPublishedRide.js";
+import { useSearchVehicle } from "../../utils/Blockchain/search/useSearchVehicle";
 interface GeoLocation {
   latitude: number | null;
   longitude: number | null;
@@ -35,8 +35,8 @@ const page = () => {
   const [destinationSuggestions, setDestinationSuggestions] = React.useState<
     Prediction[]
   >([]);
-  const [date, setDate] = React.useState();
-  const [passengers, setPassengers] = React.useState<string>();
+  const [date, setDate] = React.useState<string>("");
+  const [passengers, setPassengers] = React.useState<string>("");
   const [geoLocation, setGeoLocation] = React.useState<GeoLocation>({
     latitude: null,
     longitude: null,
@@ -58,11 +58,21 @@ const page = () => {
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
 
-  const { searchRide } = useSearchRide();
+  const { fetchRides } = useSearchRide();
+  const { fetchVehicles } = useSearchVehicle();
+  const [allRides, setAllRides] = React.useState<any[]>([]);
+  // const [allVehicles, setVehicles] = React.useState<any[]>([]);
+  const [filteredRides, setFilteredRides] = React.useState<any[]>([]); // State for filtered rides
 
   // const [ridesArr, setRidesArray] = React.useState<any[]>([]);
   useEffect(() => {
-    searchRide();
+    const PublishedRides = async () => {
+      const rides = await fetchRides();
+
+      setAllRides(rides);
+      console.log("Published Rides : ", rides);
+    };
+    PublishedRides();
     const getLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -261,6 +271,43 @@ const page = () => {
   }, []);
 
   const handleOnSearch = () => {
+    const filtered = allRides.filter((ride) => {
+      const matchesSource = ride.fromCity === source; // Adjust property name as needed
+      console.log("from city: ", ride.fromCity);
+      console.log("sources: ", source);
+      console.log("match source ? ", matchesSource);
+
+      const matchesDestination = ride.toCity === destination; // Adjust property name as needed
+
+      console.log("to City : ", ride.toCity);
+      console.log("destination : ", destination);
+      console.log("match Destination :", matchesDestination);
+      const formattedRideDate = new Date(date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      console.log("Formatted Date", formattedRideDate);
+      const matchesDate = ride.rideDate === formattedRideDate;
+      console.log("ride Date : ", ride.rideDate);
+      console.log("formatted Date : ", formattedRideDate);
+
+      console.log("matched Date ? ", matchesDate);
+      const matchesPassengers =
+        parseInt(ride.passengers) >= parseInt(passengers);
+
+      console.log("passengers : ", ride.passengers);
+      console.log("passengers : ", passengers);
+      console.log("matchPassengers ?", matchesPassengers);
+
+      return (
+        matchesSource && matchesDestination && matchesDate && matchesPassengers
+      );
+    });
+
+    setFilteredRides(filtered);
+    console.log("Filter Ride :", filteredRides);
+
     setIsLoading(true);
     axios
       .get(`${process.env.NEXT_PUBLIC_URL}/search`, {
@@ -407,11 +454,62 @@ const page = () => {
           </h1>
         </div>
       </div>
-      {rides.length === 0 ? (
+      {/* <div className="w-full bg-black text-white"> */}
+      {/* {filteredRides.length > 0 ? (
+          filteredRides.map((ride, index) => (
+            <div key={index} className="p-4 border-b border-gray-700">
+              <p>
+                <strong>Driver :</strong> {ride.username}
+              </p>
+              <p>
+                <strong>Vehicle Number:</strong> {ride.vehicleNumber}
+              </p>
+              <p>
+                <strong>From:</strong> {ride.fromCity} <strong>To:</strong>{" "}
+                {ride.toCity}
+              </p>
+              <p>
+                <strong>Date:</strong> {ride.rideDate}
+              </p>
+              <p>
+                <strong>Pick-Up Time:</strong> {ride.pickUpTime}
+              </p>
+              <p>
+                <strong>Drop Time:</strong> {ride.dropTime}
+              </p>
+              <p>
+                <strong>Cost per Passenger:</strong>{" "}
+                {ride.passengerCost.toString()}
+              </p>
+              <p>
+                <strong>Passengers : </strong>
+                {ride.passengers}
+              </p>
+            </div>
+          ))
+        ) : (
+          <div className="text-center py-4 text-gray-500">
+            No rides available.
+          </div>
+        )}
+      </div> */}
+
+      {/* {filteredRides.length === 0 ? (
         <div className="my-10 text-center text-[30px]">No ride found</div>
       ) : (
-        rides.map((ride) => <BookComponent key={ride._id} ride={ride} />)
-      )}
+        rides.map((ride, index) => <BookComponent key={ride._id} ride={ride} />)
+      )} */}
+      <div className="w-full bg-black text-white">
+        {filteredRides.length > 0 ? (
+          filteredRides.map((ride, index) => (
+            <BookComponent key={ride._id} ride={ride} />
+          ))
+        ) : (
+          <div className="text-center py-4 text-gray-500">
+            No rides available.
+          </div>
+        )}
+      </div>
 
       {showMap && (
         <div className="w-screen my-16 flex justify-center items-center ">

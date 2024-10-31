@@ -1,21 +1,29 @@
 import { ethers } from "ethers";
 import { writeContractInstance } from "../writeContractInstance";
+import { useEffect, useState } from "react";
 
 const usePublishRide = () => {
-  const address = localStorage.getItem("walletAddress");
+  const [address, setAddress] = useState();
+
+  useEffect(() => {
+    const walletAddress = localStorage.getItem("walletAddress");
+    if (walletAddress) {
+      setAddress(walletAddress);
+    }
+  }, []);
 
   const publishRide = async (
-    from,
-    to,
-    pickDate,
+    username,
+    vehicleIndex,
+    rideDate,
     passengers,
-    vehicle,
+    fromCity,
+    toCity,
     pickUpTime,
     dropTime,
-    costPerPassenger
+    passengerCost
   ) => {
     try {
-      // Ensure the wallet is connected
       if (typeof window.ethereum === "undefined") {
         console.error("Ethereum provider is not available.");
         return;
@@ -25,61 +33,54 @@ const usePublishRide = () => {
       console.log("Address:", address);
       console.log("Contract Instance:", writeContractInstance);
 
-      // Get the provider and signer
       const infuraProvider = new ethers.BrowserProvider(window.ethereum);
       const signer = await infuraProvider.getSigner();
-
-      // Update the contract instance with the new signer
       const contractWithSigner = writeContractInstance.connect(signer);
 
-      // Use default values for parameters
-      const publisher = address; // Wallet address as the publisher
-      const fromCity = from || "CityA"; // Default from city
-      const toCity = to || "CityB"; // Default to city
-      const rideDate =
-        pickDate || new Date("2024-10-02T19:00:00.000Z").toISOString(); // Default ride date
-      const totalPassengers = passengers || 3; // Default number of passengers
-      const rideType = vehicle || "Economy"; // Default ride type
-      const pickUp =
-        pickUpTime || new Date("2024-10-02T18:00:00.000Z").toISOString(); // Default pick-up time
-      const drop =
-        dropTime || new Date("2024-10-02T20:00:00.000Z").toISOString(); // Default drop-off time
-      const passengerCost = costPerPassenger || 100; // Default passenger cost
+      const formattedRideDate = new Date(rideDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
 
-      // Log the values to verify
-      console.log("Publisher:", publisher);
-      console.log("From City:", fromCity);
-      console.log("To City:", toCity);
-      console.log("Ride Date:", rideDate);
-      console.log("Passengers:", totalPassengers);
-      console.log("Ride Type:", rideType);
-      console.log("Pick Up Time:", pickUp);
-      console.log("Drop Time:", drop);
-      console.log("Passenger Cost:", passengerCost);
+      const formattedPickUpTime = new Date(pickUpTime)
+        .toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+        .replace(",", "");
+
+      const formattedDropTime = new Date(dropTime)
+        .toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+        .replace(",", "");
 
       const gasPrice = await infuraProvider.send("eth_gasPrice", []);
       const gasLimit = await contractWithSigner.publishRide.estimateGas(
-        publisher,
+        username,
+        vehicleIndex,
+        formattedRideDate,
+        passengers,
         fromCity,
         toCity,
-        rideDate,
-        totalPassengers,
-        rideType,
-        pickUp,
-        drop,
+        formattedPickUpTime,
+        formattedDropTime,
         passengerCost
       );
 
-      // Call the publishRide function on the contract
       const transaction = await contractWithSigner.publishRide(
-        publisher,
+        username,
+        vehicleIndex,
+        formattedRideDate,
+        passengers,
         fromCity,
         toCity,
-        rideDate,
-        totalPassengers,
-        rideType,
-        pickUp,
-        drop,
+        formattedPickUpTime,
+        formattedDropTime,
         passengerCost,
         {
           gasLimit: gasLimit,

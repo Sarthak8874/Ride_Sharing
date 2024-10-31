@@ -1,41 +1,53 @@
-import { useCallback, useState } from "react";
-import { writeContractAddress } from "../writeContractInstance";
-import useWalletConnection from "../useWalletConnection";
+import { useCallback, useState, useEffect } from "react";
+import { writeContractInstance } from "../writeContractInstance";
+import { ethers } from "ethers";
 
-const useVehicalRegistration = () => {
-  let [walletAddress, setWalletAddress] = useState();
-  walletAddress = setWalletAddress(localStorage.getItem("walletAddress"));
+const useVehicleRegistration = () => {
+  const [walletAddress, setWalletAddress] = useState();
+
+  useEffect(() => {
+    setWalletAddress(localStorage.getItem("walletAddress"));
+  }, []);
+
   const registerVehicle = useCallback(
     async (
-      vehicalOwner,
       username,
       number,
-      vehicalImageHash,
+      vehicleImageHash,
       adharCardImageHash,
       RC_ImageHash
     ) => {
       try {
-        const tx = await contract.vehicalRegistration(
-          walletAddress,
-          vehicalOwner,
+        if (typeof window.ethereum === "undefined") {
+          console.error("Ethereum provider is not available.");
+          return;
+        }
+
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const infuraProvider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await infuraProvider.getSigner();
+        const contractWithSigner = writeContractInstance.connect(signer);
+        const username = localStorage.getItem("username");
+        console.log("username:", username);
+        const tx = await contractWithSigner.registerVehicle(
           username,
           number,
-          vehicalImageHash,
+          vehicleImageHash,
           adharCardImageHash,
           RC_ImageHash
         );
         console.log("Transaction sent: ", tx.hash);
 
-        const receipt = await tx.wait(); // Wait for the transaction to be mined
+        const receipt = await tx.wait();
         console.log("Transaction mined: ", receipt);
       } catch (error) {
         console.error("Error registering vehicle: ", error);
       }
     },
     [walletAddress]
-  ); // Add walletAddress as a dependency
+  );
 
   return { registerVehicle };
 };
 
-export { useVehicalRegistration };
+export { useVehicleRegistration };

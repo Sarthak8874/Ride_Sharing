@@ -1,1 +1,3 @@
-export const contractAddress = "0xCcE9b7714022B81417B98d435C4951c885aA8a5e";
+// USE ADDRESS OF YOUR OWN TESTNET CONTRACT ADDRESS
+
+export const contractAddress = "0xfd7f6DC849421C78d2CD19aA60ceD9B79873b0bc";

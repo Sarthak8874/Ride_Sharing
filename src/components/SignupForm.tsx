@@ -12,10 +12,10 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Spinner from "./Spinner";
 import { UserContext } from "@/utils/UserProvider";
-
+import { useSignUp } from "../utils/Blockchain/signUp/useSignUp.js";
 
 export function SignupForm() {
-  const {updateToken} = React.useContext(UserContext);
+  const { updateToken } = React.useContext(UserContext);
   const router = useRouter();
   const [loader, setLoader] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,7 +35,7 @@ export function SignupForm() {
       [name]: value,
     });
   };
-
+  const { signUp, loading, error, success } = useSignUp();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted");
@@ -44,7 +44,7 @@ export function SignupForm() {
     try {
       if (formData.password !== formData.confirmPassword) {
         // alert("password doesn't match");
-        toast.error("Password Dosen't Match");
+        toast.error("Password Doesn't Match");
         return;
       }
       const response = await fetch(
@@ -59,7 +59,10 @@ export function SignupForm() {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          signUp(formData);
+          console.log("data", data);
+          localStorage.setItem("username", formData.username);
+          console.log("username", formData.username);
           localStorage.setItem("token", data.token);
           updateToken(data.token);
           setFormData({
@@ -73,7 +76,7 @@ export function SignupForm() {
           });
           setLoader(false);
           router.push("/");
-          
+
           toast.success("Sign up Done!!");
         });
     } catch (err) {

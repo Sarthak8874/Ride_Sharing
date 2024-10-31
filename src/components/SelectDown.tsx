@@ -2,49 +2,63 @@ import * as React from "react";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUserVehicleNumbers } from "../utils/Blockchain/UserVehicleNumber/useUserVehicleNumbers";
+
+interface SelectDownProps {
+  setVehicleId: (id: string) => void;
+  setSelectedIndex: (index: number) => void;
+}
 
 export function SelectDown({
-  data,
   setVehicleId,
-}: {
-  data: any;
-  setVehicleId: any;
-}) {
-  const vehicle = [
-    { _id: "1", vehicleNumber: "Tesla Model S" },
-    { _id: "2", vehicleNumber: "Ford Mustang" },
-    { _id: "3", vehicleNumber: "Chevrolet Camaro" },
-    { _id: "4", vehicleNumber: "BMW M3" },
-    { _id: "5", vehicleNumber: "Audi A4" },
-  ];
+  setSelectedIndex,
+}: SelectDownProps) {
+  const username = localStorage.getItem("username");
+  const { fetchVehicleNumbers, vehicleNumbers, loading, error } =
+    useUserVehicleNumbers(username);
+
+  React.useEffect(() => {
+    if (username) {
+      fetchVehicleNumbers();
+    }
+  }, [username]);
+
   return (
     <Select
-      onValueChange={(value) => {
+      onValueChange={(value: string) => {
+        const index = vehicleNumbers.indexOf(value);
         setVehicleId(value);
+        setSelectedIndex(index);
       }}
     >
-      <SelectTrigger className="w-[440px]  bg-white">
+      <SelectTrigger className="w-[440px] bg-white">
         <SelectValue placeholder="Select Vehicle" />
       </SelectTrigger>
 
       <SelectContent className="bg-white">
-        <SelectGroup>
-          {data?.length > 0 &&
-            data.map((item: any) => {
-              return (
-                <SelectItem value={item._id} key={item._id}>
-                  {item.vehicleNumber}
-                </SelectItem>
-              );
-            })}
-          {data?.length === 0 && <SelectItem disabled value="1"></SelectItem>}
-        </SelectGroup>
+        {loading ? (
+          <SelectItem disabled value="loading">
+            Loading vehicles...
+          </SelectItem>
+        ) : error ? (
+          <SelectItem disabled value="error">
+            Error fetching vehicles
+          </SelectItem>
+        ) : vehicleNumbers.length > 0 ? (
+          vehicleNumbers.map((number, index) => (
+            <SelectItem value={number} key={index}>
+              {number}
+            </SelectItem>
+          ))
+        ) : (
+          <SelectItem disabled value="no-vehicles">
+            No vehicles available
+          </SelectItem>
+        )}
       </SelectContent>
     </Select>
   );

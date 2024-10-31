@@ -2,9 +2,24 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "publisher",
-        type: "address",
+        internalType: "string",
+        name: "_username",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_vehicleIndex",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "_rideDate",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_passengers",
+        type: "string",
       },
       {
         internalType: "string",
@@ -18,22 +33,7 @@ export const abi = [
       },
       {
         internalType: "string",
-        name: "_rideDate",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_passengers",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_rideType",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_pickTime",
+        name: "_pickUpTime",
         type: "string",
       },
       {
@@ -55,23 +55,18 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_vehicalOwner",
-        type: "address",
-      },
-      {
         internalType: "string",
         name: "_username",
         type: "string",
       },
       {
-        internalType: "uint256",
+        internalType: "string",
         name: "_number",
-        type: "uint256",
+        type: "string",
       },
       {
         internalType: "string",
-        name: "_vehicalImageHash",
+        name: "_vehicleImageHash",
         type: "string",
       },
       {
@@ -85,19 +80,163 @@ export const abi = [
         type: "string",
       },
     ],
-    name: "vehicalRegistration",
+    name: "registerVehicle",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_firstName",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_lastName",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_emailAddress",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_password",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_confirmPassword",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_username",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_phoneNumber",
+        type: "string",
+      },
+    ],
+    name: "signUp",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "getRidesCount",
+    name: "getPublishedVehicleCount",
     outputs: [
       {
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getPublishedVehicles",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "string",
+            name: "username",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "vehicleNumber",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "rideDate",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "passengers",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "fromCity",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "toCity",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "pickUpTime",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "dropTime",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "passengerCost",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct RideSharing.PublishVehicle[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_username",
+        type: "string",
+      },
+    ],
+    name: "getUserVehicles",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "string",
+            name: "number",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "vehicleImageHash",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "adharCardImageHash",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "RC_ImageHash",
+            type: "string",
+          },
+        ],
+        internalType: "struct RideSharing.RegisterVehicle[]",
+        name: "",
+        type: "tuple[]",
       },
     ],
     stateMutability: "view",
@@ -111,12 +250,27 @@ export const abi = [
         type: "uint256",
       },
     ],
-    name: "rides",
+    name: "publishedVehicles",
     outputs: [
       {
-        internalType: "address",
-        name: "publisher",
-        type: "address",
+        internalType: "string",
+        name: "username",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "vehicleNumber",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "rideDate",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "passengers",
+        type: "string",
       },
       {
         internalType: "string",
@@ -126,21 +280,6 @@ export const abi = [
       {
         internalType: "string",
         name: "toCity",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "rideDate",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "passengers",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "rideType",
         type: "string",
       },
       {
@@ -157,50 +296,6 @@ export const abi = [
         internalType: "uint256",
         name: "passengerCost",
         type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "vehicals",
-    outputs: [
-      {
-        internalType: "address",
-        name: "vehicalOwner",
-        type: "address",
-      },
-      {
-        internalType: "string",
-        name: "username",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "number",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "vehicalImageHash",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "adharCardImageHash",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "RC_ImageHash",
-        type: "string",
       },
     ],
     stateMutability: "view",

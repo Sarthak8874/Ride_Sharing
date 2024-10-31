@@ -37,6 +37,7 @@ const page = () => {
   const [vehicleId, setvehicleId] = React.useState("");
   const [destinationTime, setDestinantionTime] = useState(null);
   const [destination, setDestination] = React.useState<string>("");
+  const [selectedIndex, setSelectedIndex] = React.useState<number>();
   const [sourcesuggestions, setsourceSuggestions] = React.useState<
     Prediction[]
   >([]);
@@ -46,7 +47,7 @@ const page = () => {
   const [etherCost, setetherCost] = React.useState<string>("");
   const [allVehicles, setAllVehicles] = useState(null);
   const [distance, setDistance] = useState("");
-  const [passengers, setPassengers] = React.useState<string>();
+  const [passengers, setPassengers] = React.useState<string>("");
   const [geoLocation, setGeoLocation] = React.useState<GeoLocation>({
     latitude: null,
     longitude: null,
@@ -54,36 +55,18 @@ const page = () => {
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
 
-  const userDataString = localStorage.getItem("userData");
-
-  let username = "";
-  if (
-    userDataString === null ||
-    userDataString === undefined ||
-    userDataString === ""
-  ) {
-    username = "null";
-  } else {
-    // console.log("usr",userDataString);
-    const userData = JSON.parse(userDataString);
-    username = userData.username;
-  }
-  // if (userDataString !== null) {
-  //   const userData = JSON.parse(userDataString);
-  //   username = userData.username;
-  // } else {
-  //   console.error("User data not found in localStorage");
-  // }
-
   const { publishRide } = usePublishRide();
-
+  const username = localStorage.getItem("username");
+  console.log("Username : ", username);
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await publishRide(
-      source,
-      destination,
+      username,
+      selectedIndex,
       date,
       passengers,
+      source,
+      destination,
       souceTime,
       destinationTime,
       etherCost
@@ -426,7 +409,11 @@ const page = () => {
             </div>
 
             <div className="w-full">
-              <SelectDown setVehicleId={setvehicleId} data={allVehicles} />
+              <SelectDown
+                setVehicleId={setvehicleId}
+                data={allVehicles}
+                setSelectedIndex={setSelectedIndex}
+              />
             </div>
 
             <div className="flex   w-full  gap-5">

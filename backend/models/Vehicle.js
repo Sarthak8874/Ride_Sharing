@@ -35,7 +35,7 @@ const vehicleSchema = new mongoose.Schema({
   approvedStatus: {
     type: String,
     enum: ["Approved", "Pending", "Rejected"],
-    default: "Pending",
+    default: "Approved",
   },
   vehicleImage: {
     type: String,

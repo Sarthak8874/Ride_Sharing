@@ -33,19 +33,19 @@ const getDistance = async (sourceId, destinationId) => {
   try {
     const response = await axios.get(url, {
       headers: {
-        'Content-Type': 'application/json',
-        'Origin': 'http://localhost' // Adjust as necessary
-      }
+        "Content-Type": "application/json",
+        Origin: "http://localhost", // Adjust as necessary
+      },
     });
-    if (response.data.status === 'OK') {
+    if (response.data.status === "OK") {
       const distance = response.data.rows[0].elements[0].distance.value; // distance in meters
       return distance / 1000; // convert to kilometers
     } else {
-      console.error('Error from Google API:', response.data.error_message);
+      console.error("Error from Google API:", response.data.error_message);
       return null;
     }
   } catch (error) {
-    console.error('Error fetching distance from Google API:', error);
+    console.error("Error fetching distance from Google API:", error);
     return null;
   }
 };
@@ -53,7 +53,6 @@ const getDistance = async (sourceId, destinationId) => {
 // Get feasible rides as per the search criteria
 router.get("/search", auth, async (req, res) => {
   try {
-    
     const { sourceId, destinationId, date, seatsRequired } = req.query;
     const seats = parseInt(seatsRequired);
     const userId = req.user._id;
@@ -85,7 +84,7 @@ router.get("/search", auth, async (req, res) => {
     feasibleRides = feasibleRides.filter(
       (ride) => ride.destinationId === destinationId
     );
-    
+
     // Filter rides based on distance between sourceId and destinationId
     const filteredRidesWithDistance = [];
     for (const ride of feasibleRides) {
