@@ -12,7 +12,7 @@ import { UserContext } from "@/utils/UserProvider";
 import MapComponent from "@/components/MapComponent";
 import Spinner from "@/components/Spinner";
 import { useSearchRide } from "../../utils/Blockchain/search/useSearchPublishedRide.js";
-import { useSearchVehicle } from "../../utils/Blockchain/search/useSearchVehicle";
+// import { useSearchVehicle } from "../../utils/Blockchain/search/useSearchVehicle";
 interface GeoLocation {
   latitude: number | null;
   longitude: number | null;
@@ -59,7 +59,7 @@ const page = () => {
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
 
   const { fetchRides } = useSearchRide();
-  const { fetchVehicles } = useSearchVehicle();
+  // const { fetchVehicles } = useSearchVehicle();
   const [allRides, setAllRides] = React.useState<any[]>([]);
   // const [allVehicles, setVehicles] = React.useState<any[]>([]);
   const [filteredRides, setFilteredRides] = React.useState<any[]>([]); // State for filtered rides
@@ -293,8 +293,7 @@ const page = () => {
       console.log("formatted Date : ", formattedRideDate);
 
       console.log("matched Date ? ", matchesDate);
-      const matchesPassengers =
-        parseInt(ride.passengers) >= parseInt(passengers);
+      const matchesPassengers = ride.numberOfSeats >= passengers;
 
       console.log("passengers : ", ride.passengers);
       console.log("passengers : ", passengers);

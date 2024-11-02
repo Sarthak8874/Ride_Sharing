@@ -31,6 +31,7 @@ export default function Navbar() {
       localStorage.removeItem("token");
       localStorage.removeItem("userData");
       localStorage.removeItem("username");
+      localStorage.removeItem("walletAddress");
       toast.success("Logged Out successfully!!");
       updateToken("");
       setUserData(null);

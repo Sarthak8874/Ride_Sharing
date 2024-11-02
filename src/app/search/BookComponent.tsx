@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaEthereum } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { useBookingState } from "../../utils/Blockchain/book/useBookingState";
 
 interface Ride {
   _id: string;
@@ -16,42 +17,53 @@ interface Ride {
   passengerCost: number;
   fromCity: string;
   toCity: string;
+  rideDate: string;
+  totalDistance: string;
+  passengers: number;
 }
 
 const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
   const router = useRouter();
+  const { rideBooking } = useBookingState();
+  const [bookRide, setBookRide] = useState<any>();
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
-    e.preventDefault();
-    toast.success("Moving to booking page");
-    router.push(`/book/67238bd43869a75671bd0a6c`);
-  };
+  const pickUpTime = ride.pickUpTime;
+  const dropTime = ride.dropTime;
 
-  const pickUpTime = ride.pickUpTime; // Example pick-up time
-  const dropTime = ride.dropTime; // Example drop-off time
-
-  // Parse the times
-  const format = "hh:mm A"; // Define the time format
+  const format = "hh:mm A";
   const moment1 = moment(pickUpTime, format);
   const moment2 = moment(dropTime, format);
 
-  // Check if the drop time is earlier than the pick-up time
   if (moment2.isBefore(moment1)) {
-    // Add one day to the drop time
     moment2.add(1, "days");
   }
 
-  // Calculate the difference in minutes
   const differenceInMinutes = moment2.diff(moment1, "minutes");
 
-  // Convert the difference into hours and minutes
   const hours = Math.floor(differenceInMinutes / 60);
   const minutes = differenceInMinutes % 60;
 
-  // Format the result as hh:mm
   const formattedDifference = `${hours}h ${minutes}min`;
 
   console.log(`Total difference: ${formattedDifference}`);
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    e.preventDefault();
+    const bookingDetails = {
+      rideDate: ride.rideDate,
+      fromCity: ride.fromCity,
+      toCity: ride.toCity,
+      Driver: ride.username,
+      distance: formattedDifference,
+      passengerCost: ride.passengerCost,
+      passengers: ride.passengers,
+    };
+
+    rideBooking({ bookRide: bookingDetails });
+
+    toast.success("Moving to booking page");
+    router.push(`/book/67238bd43869a75671bd0a6c`);
+  };
 
   return (
     <div className="m-[40px] border-[#7c7c7c] flex flex-col gap-[30px] h-[200px] rounded-[20px] cursor-pointer py-[20px] px-[10px] shadow-md hover:shadow-lg transition duration-300">

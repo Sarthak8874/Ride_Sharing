@@ -44,10 +44,10 @@ const page = () => {
   const [destinationSuggestions, setDestinationSuggestions] = useState<
     Prediction[]
   >([]);
-  const [etherCost, setetherCost] = React.useState<string>("");
+  const [etherCost, setetherCost] = React.useState<number>();
   const [allVehicles, setAllVehicles] = useState(null);
   const [distance, setDistance] = useState("");
-  const [passengers, setPassengers] = React.useState<string>("");
+  const [passengers, setPassengers] = React.useState<number>();
   const [geoLocation, setGeoLocation] = React.useState<GeoLocation>({
     latitude: null,
     longitude: null,
@@ -63,10 +63,10 @@ const page = () => {
     await publishRide(
       username,
       selectedIndex,
-      date,
-      passengers,
       source,
       destination,
+      date,
+      passengers,
       souceTime,
       destinationTime,
       etherCost

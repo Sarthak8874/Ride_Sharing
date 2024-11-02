@@ -7,6 +7,11 @@ const useSearchRide = () => {
   const fetchRides = async () => {
     try {
       const ridesLength = await readContractInstance.getPublishedVehicleCount();
+      for (let i = 0; i < 4; i++) {
+        const book = await readContractInstance.bookedRide(i);
+        console.log(" booked Ride : ", book);
+      }
+
       console.log("Rides length: ", ridesLength);
 
       const ridesArray = [];
