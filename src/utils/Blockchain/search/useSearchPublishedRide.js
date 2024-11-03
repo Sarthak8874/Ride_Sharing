@@ -9,13 +9,8 @@ const useSearchRide = () => {
       const ridesLength = await readContractInstance.getPublishedVehicleCount();
       for (let i = 0; i < 4; i++) {
         const book = await readContractInstance.bookedRide(i);
-        console.log(" booked Ride : ", book);
       }
-
-      console.log("Rides length: ", ridesLength);
-
       const ridesArray = [];
-
       for (let i = 0; i < ridesLength; i++) {
         const ride = await readContractInstance.publishedVehicles(i);
         console.log(ride);

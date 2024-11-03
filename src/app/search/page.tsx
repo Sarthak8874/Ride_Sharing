@@ -270,11 +270,14 @@ const page = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const handleOnSearch = () => {
+  const handleOnSearch = async () => {
+
+    setIsLoading(true)
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     const filtered = allRides.filter((ride) => {
-      console.log(sourceId, destinationId, date, passengers);
-      const matchesSource = ride.fromCity === sourceId;
-      const matchesDestination = ride.toCity === destinationId; 
+      const matchesSource = ride.fromCity === source;
+      const matchesDestination = ride.toCity === destination; 
       const formattedRideDate = new Date(date).toLocaleDateString("en-US", {
         year: "numeric",
         month: "2-digit",
@@ -289,9 +292,7 @@ const page = () => {
     });
 
     setFilteredRides(filtered);
-    console.log("Filter Ride :", filteredRides);
-
-    // setIsLoading(true);
+    setIsLoading(false);
   };
   if (isLoading) {
     return (
@@ -418,52 +419,8 @@ const page = () => {
           </h1>
         </div>
       </div>
-      {/* <div className="w-full bg-black text-white"> */}
-      {/* {filteredRides.length > 0 ? (
-          filteredRides.map((ride, index) => (
-            <div key={index} className="p-4 border-b border-gray-700">
-              <p>
-                <strong>Driver :</strong> {ride.username}
-              </p>
-              <p>
-                <strong>Vehicle Number:</strong> {ride.vehicleNumber}
-              </p>
-              <p>
-                <strong>From:</strong> {ride.fromCity} <strong>To:</strong>{" "}
-                {ride.toCity}
-              </p>
-              <p>
-                <strong>Date:</strong> {ride.rideDate}
-              </p>
-              <p>
-                <strong>Pick-Up Time:</strong> {ride.pickUpTime}
-              </p>
-              <p>
-                <strong>Drop Time:</strong> {ride.dropTime}
-              </p>
-              <p>
-                <strong>Cost per Passenger:</strong>{" "}
-                {ride.passengerCost.toString()}
-              </p>
-              <p>
-                <strong>Passengers : </strong>
-                {ride.passengers}
-              </p>
-            </div>
-          ))
-        ) : (
-          <div className="text-center py-4 text-gray-500">
-            No rides available.
-          </div>
-        )}
-      </div> */}
 
-      {/* {filteredRides.length === 0 ? (
-        <div className="my-10 text-center text-[30px]">No ride found</div>
-      ) : (
-        rides.map((ride, index) => <BookComponent key={ride._id} ride={ride} />)
-      )} */}
-      <div className="w-full bg-black text-white">
+      <div className="w-full text-black">
         {filteredRides.length > 0 ? (
           filteredRides.map((ride, index) => (
             <BookComponent key={ride._id} ride={ride} />
