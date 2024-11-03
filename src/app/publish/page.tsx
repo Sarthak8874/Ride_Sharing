@@ -63,8 +63,8 @@ const page = () => {
     await publishRide(
       username,
       selectedIndex,
-      source,
-      destination,
+      sourceId,
+      destinationId,
       date,
       passengers,
       souceTime,

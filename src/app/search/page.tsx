@@ -272,32 +272,16 @@ const page = () => {
 
   const handleOnSearch = () => {
     const filtered = allRides.filter((ride) => {
-      const matchesSource = ride.fromCity === source; // Adjust property name as needed
-      console.log("from city: ", ride.fromCity);
-      console.log("sources: ", source);
-      console.log("match source ? ", matchesSource);
-
-      const matchesDestination = ride.toCity === destination; // Adjust property name as needed
-
-      console.log("to City : ", ride.toCity);
-      console.log("destination : ", destination);
-      console.log("match Destination :", matchesDestination);
+      console.log(sourceId, destinationId, date, passengers);
+      const matchesSource = ride.fromCity === sourceId;
+      const matchesDestination = ride.toCity === destinationId; 
       const formattedRideDate = new Date(date).toLocaleDateString("en-US", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
       });
-      console.log("Formatted Date", formattedRideDate);
       const matchesDate = ride.rideDate === formattedRideDate;
-      console.log("ride Date : ", ride.rideDate);
-      console.log("formatted Date : ", formattedRideDate);
-
-      console.log("matched Date ? ", matchesDate);
-      const matchesPassengers = ride.numberOfSeats >= passengers;
-
-      console.log("passengers : ", ride.passengers);
-      console.log("passengers : ", passengers);
-      console.log("matchPassengers ?", matchesPassengers);
+      const matchesPassengers = parseInt(ride.numberOfSeats.toString(), 10) >= parseInt(passengers, 10);
 
       return (
         matchesSource && matchesDestination && matchesDate && matchesPassengers
@@ -307,26 +291,7 @@ const page = () => {
     setFilteredRides(filtered);
     console.log("Filter Ride :", filteredRides);
 
-    setIsLoading(true);
-    axios
-      .get(`${process.env.NEXT_PUBLIC_URL}/search`, {
-        params: {
-          sourceId: sourceId,
-          destinationId: destinationId,
-          date: date,
-          seatsRequired: passengers,
-        },
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        console.log(res.data.data);
-        setRides(res.data.data);
-        setIsLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-        setIsLoading(false);
-      });
+    // setIsLoading(true);
   };
   if (isLoading) {
     return (
