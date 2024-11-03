@@ -8,33 +8,31 @@ const userRoutes = require("./user");
 const bookingRoute = require("./Booking");
 const vehicleRoutes = require("./Vehicle");
 
-
 router.get("/", (req, res) => {
-    return res.status(200).json({
-        status: true,
-        message: "API is working",
-    });
+  return res.status(200).json({
+    status: true,
+    message: "API is working",
+  });
 });
 
 router.post("/test", async (req, res) => {
-    const { firstName, lastName, message, email } = req.body;
+  const { firstName, lastName, message, email } = req.body;
 
-    const data = await Contact.create({ firstName, lastName, message, email });
+  const data = await Contact.create({ firstName, lastName, message, email });
 
-    return res.status(200).json({
-        status: true,
-        message: "testing done",
-    });
+  return res.status(200).json({
+    status: true,
+    message: "testing done",
+  });
 });
 
 //signIn, signUp
-router.use("/user",userRoutes);
+router.use("/user", userRoutes);
 
 // publish, search, book
 router.use(bookingRoute);
 
-// vehicle 
-router.use("/vehicle",vehicleRoutes)
-
+// vehicle
+router.use("/vehicle", vehicleRoutes);
 
 module.exports = router;

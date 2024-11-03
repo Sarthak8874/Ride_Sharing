@@ -137,7 +137,7 @@ userRouter.put("/update/profile/:id", async (req, res) => {
   }
 });
 
-userRouter.get("/profile",auth, async (req, res) => {
+userRouter.get("/profile", auth, async (req, res) => {
   try {
     const id = req.user._id;
     const user = await User.findById(id);
@@ -152,20 +152,23 @@ userRouter.get("/profile",auth, async (req, res) => {
       message: "User found",
       data: user,
     });
-    } catch (error) {
+  } catch (error) {
     return res.status(500).json({
       success: false,
       message: "Failed to get user",
     });
-    }
+  }
 });
 
-
-userRouter.put("/update-wallet",auth, async (req, res) => {
-  try {    
-    const {walletAddress} = req.body;
+userRouter.put("/update-wallet", auth, async (req, res) => {
+  try {
+    const { walletAddress } = req.body;
     const id = req.user._id;
-    const user = await User.findByIdAndUpdate({_id:id}, { walletAddress: walletAddress }, { new: true });
+    const user = await User.findByIdAndUpdate(
+      { _id: id },
+      { walletAddress: walletAddress },
+      { new: true }
+    );
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -177,18 +180,13 @@ userRouter.put("/update-wallet",auth, async (req, res) => {
       message: "Wallet Address Updated",
       data: user,
     });
-
-
   } catch (err) {
     return res.status(500).json({
       success: false,
       message: "Failed to update wallet address",
-      data : err.message
+      data: err.message,
     });
   }
-
 });
-
-
 
 module.exports = userRouter;

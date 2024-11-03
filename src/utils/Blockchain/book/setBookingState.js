@@ -1,0 +1,3 @@
+const setBookingState = () => {
+  const setBooking = () => {};
+};

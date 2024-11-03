@@ -11,10 +11,11 @@ import axios from "axios";
 import { SelectDown } from "@/components/SelectDown";
 import { UserContext } from "@/utils/UserProvider";
 import { toast } from "react-toastify";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import MapComponent from "@/components/MapComponent";
 import { publishTransaction } from "@/context/TransactionContext";
 import withAuth from "@/components/withAuth";
+import { usePublishRide } from "../../utils/Blockchain/publishRide/usePublishRide";
 
 interface GeoLocation {
   latitude: number | null;
@@ -36,16 +37,17 @@ const page = () => {
   const [vehicleId, setvehicleId] = React.useState("");
   const [destinationTime, setDestinantionTime] = useState(null);
   const [destination, setDestination] = React.useState<string>("");
+  const [selectedIndex, setSelectedIndex] = React.useState<number>();
   const [sourcesuggestions, setsourceSuggestions] = React.useState<
     Prediction[]
   >([]);
   const [destinationSuggestions, setDestinationSuggestions] = useState<
     Prediction[]
   >([]);
-  const [etherCost, setetherCost] = React.useState<string>("");
+  const [etherCost, setetherCost] = React.useState<number>();
   const [allVehicles, setAllVehicles] = useState(null);
   const [distance, setDistance] = useState("");
-  const [passengers, setPassengers] = React.useState<string>();
+  const [passengers, setPassengers] = React.useState<number>();
   const [geoLocation, setGeoLocation] = React.useState<GeoLocation>({
     latitude: null,
     longitude: null,
@@ -53,24 +55,23 @@ const page = () => {
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
 
-  const userDataString = localStorage.getItem("userData");
-
-  let username = "";
-  if(userDataString === null || userDataString === undefined || userDataString === ""){
-    username = "null";
-  }
-  else
-  {
-    // console.log("usr",userDataString);
-    const userData = JSON.parse(userDataString);
-    username = userData.username;
-  }
-  // if (userDataString !== null) {
-  //   const userData = JSON.parse(userDataString);
-  //   username = userData.username;
-  // } else {
-  //   console.error("User data not found in localStorage");
-  // }
+  const { publishRide } = usePublishRide();
+  const username = localStorage.getItem("username");
+  console.log("Username : ", username);
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    await publishRide(
+      username,
+      selectedIndex,
+      source,
+      destination,
+      date,
+      passengers,
+      souceTime,
+      destinationTime,
+      etherCost
+    );
+  };
 
   useEffect(() => {
     const getLocation = () => {
@@ -239,20 +240,24 @@ const page = () => {
     // Cleanup function on unmount
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-  const {token,userData,setlongiLat,setdestiLongiLat} = React.useContext(UserContext);
+  const { token, userData, setlongiLat, setdestiLongiLat } =
+    React.useContext(UserContext);
   const router = useRouter();
   const handleOnPublish = async () => {
     try {
-     await publishTransaction(userData.walletAddress);
-     await  axios
-        .get("https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json", {
-          params: {
-            destinations: `place_id:${destinationId}`,
-            origins: `place_id:${sourceId}`,
-            key: process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY,
-            units: "km",
-          },
-        })
+      await publishTransaction(userData.walletAddress);
+      await axios
+        .get(
+          "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json",
+          {
+            params: {
+              destinations: `place_id:${destinationId}`,
+              origins: `place_id:${sourceId}`,
+              key: process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY,
+              units: "km",
+            },
+          }
+        )
         .then((res) => {
           setDistance(res.data.rows[0].elements[0].distance.text);
         })
@@ -260,7 +265,7 @@ const page = () => {
           console.log(e);
         });
 
-     await  axios
+      await axios
         .post(
           `${process.env.NEXT_PUBLIC_URL}/publish`,
           {
@@ -284,7 +289,7 @@ const page = () => {
         )
         .then((res) => {
           console.log(res);
-          toast.success("Ride Published Successfully", )
+          toast.success("Ride Published Successfully");
           setDestinantionTime(null);
           setSouceTime(null);
           setDestination("");
@@ -392,7 +397,7 @@ const page = () => {
               </div>
             </div>
             <div className="w-full ">
-              <DatePickerDemo   setDate2={setDate} />
+              <DatePickerDemo setDate2={setDate} />
               <Input
                 type="number"
                 required
@@ -402,9 +407,13 @@ const page = () => {
                 className="w-[440px] mt-5"
               />
             </div>
-            
+
             <div className="w-full">
-              <SelectDown  setVehicleId={setvehicleId} data={allVehicles} />
+              <SelectDown
+                setVehicleId={setvehicleId}
+                data={allVehicles}
+                setSelectedIndex={setSelectedIndex}
+              />
             </div>
 
             <div className="flex   w-full  gap-5">
@@ -459,24 +468,18 @@ const page = () => {
               />
               <Button
                 className="mx-auto mt-5 w-[440px] "
-                onClick={() => {
-                  handleOnPublish();
-                }}
+                onClick={handleSubmit}
                 variant="outline"
               >
                 Publish
               </Button>
-              
             </div>
-            
           </div>
 
           <div className="relative ">
-            <MapComponent width='600px' height='500px' />
+            <MapComponent width="600px" height="500px" />
           </div>
-
         </div>
-        
       </div>
     </>
   );

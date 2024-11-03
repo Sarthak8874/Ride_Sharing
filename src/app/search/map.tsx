@@ -36,13 +36,13 @@ const Map: React.FC = () => {
       }
     };
     getLocation();
-  }, []); 
+  }, []);
 
   useEffect(() => {
     if (input.trim() !== "") {
       axios
         .get(
-          `${process.env.NEXT_PUBLIC_DB_MAP_URL}?input=${input}&location=${geoLocation.latitude}-${geoLocation.longitude}&radius=5&country=in&key=${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}`,
+          `${process.env.NEXT_PUBLIC_DB_MAP_URL}?input=${input}&location=${geoLocation.latitude}-${geoLocation.longitude}&radius=5&country=in&key=${process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY}`
         )
         .then((res) => {
           if (
@@ -74,9 +74,14 @@ const Map: React.FC = () => {
       />
       <ul>
         {suggestions.map((place, index) => (
-          <li key={index} onClick={()=>{
-            setInput(place.description)
-          }}>{place.description}</li>
+          <li
+            key={index}
+            onClick={() => {
+              setInput(place.description);
+            }}
+          >
+            {place.description}
+          </li>
         ))}
       </ul>
     </div>

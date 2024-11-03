@@ -1,14 +1,14 @@
-import SignupForm from '@/components/SignupForm'
-import Spinner from '@/components/Spinner'
-import React from 'react'
+import SignupForm from "@/components/SignupForm";
+import Spinner from "@/components/Spinner";
+import React from "react";
 
 function page() {
   return (
     <div>
-        <SignupForm/>
-        {/* <Spinner/> */}
+      <SignupForm />
+      {/* <Spinner/> */}
     </div>
-  )
+  );
 }
 
-export default page
+export default page;
