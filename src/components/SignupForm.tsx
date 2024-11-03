@@ -58,8 +58,8 @@ export function SignupForm() {
         }
       )
         .then((res) => res.json())
-        .then((data) => {
-          signUp(formData);
+        .then(async (data) => {
+         
           console.log("data", data);
           localStorage.setItem("username", formData.username);
           console.log("username", formData.username);
@@ -74,9 +74,10 @@ export function SignupForm() {
             username: "",
             phoneNumber: "",
           });
+          await signUp(formData);
+          signUp(formData);
           setLoader(false);
           router.push("/");
-
           toast.success("Sign up Done!!");
         });
     } catch (err) {

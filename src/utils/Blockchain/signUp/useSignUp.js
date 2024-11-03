@@ -48,11 +48,8 @@ const useSignUp = () => {
 
       await tx.wait();
       setSuccess(true);
-      toast.success("Sign up successful!");
     } catch (error) {
       console.error("Error during sign up:", error);
-      setError(error.message || "Sign up failed.");
-      toast.error(error.message || "Sign up failed.");
     } finally {
       setLoading(false);
     }
