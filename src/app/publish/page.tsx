@@ -6,7 +6,7 @@ import { DatePickerDemo } from "../../components/Datepicker";
 import { Button } from "@/components/ui/button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { SelectDown } from "@/components/SelectDown";
 import { UserContext } from "@/utils/UserProvider";
@@ -30,6 +30,7 @@ const page = () => {
   const [source, setSource] = React.useState<string>("");
   const [sourceId, setsourceId] = React.useState<string>("");
   const [destinationId, setDestinationId] = React.useState<string>("");
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [date, setDate] = React.useState(null);
   const [startTime, setstartTime] = React.useState();
   const [endTime, setendTime] = React.useState();
@@ -54,11 +55,12 @@ const page = () => {
   });
   const sourceInputRef = React.useRef<HTMLInputElement>(null);
   const destinationInputRef = React.useRef<HTMLInputElement>(null);
-
+  const router = useRouter();
   const { publishRide } = usePublishRide();
   const username = localStorage.getItem("username");
   console.log("Username : ", username);
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    setIsLoading(true);
     e.preventDefault();
     await publishRide(
       username,
@@ -71,6 +73,9 @@ const page = () => {
       destinationTime,
       etherCost
     );
+    setIsLoading(false);
+    toast.success("Ride Published Successfully");
+    router.push("/search");
   };
 
   useEffect(() => {
@@ -240,76 +245,15 @@ const page = () => {
     // Cleanup function on unmount
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
-  const { token, userData, setlongiLat, setdestiLongiLat } =
-    React.useContext(UserContext);
-  const router = useRouter();
-  const handleOnPublish = async () => {
-    try {
-      await publishTransaction(userData.walletAddress);
-      await axios
-        .get(
-          "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json",
-          {
-            params: {
-              destinations: `place_id:${destinationId}`,
-              origins: `place_id:${sourceId}`,
-              key: process.env.NEXT_PUBLIC_GOOGLEMAP_APIKEY,
-              units: "km",
-            },
-          }
-        )
-        .then((res) => {
-          setDistance(res.data.rows[0].elements[0].distance.text);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-
-      await axios
-        .post(
-          `${process.env.NEXT_PUBLIC_URL}/publish`,
-          {
-            sourceId: sourceId,
-            destinationId: destinationId,
-            sourceName: source,
-            destinationName: destination,
-            vehicleId: vehicleId,
-            etherCost,
-            // distance: distance,
-            date: date,
-            startTime: souceTime,
-            endTime: destinationTime,
-            numberOfSeats: passengers,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res);
-          toast.success("Ride Published Successfully");
-          setDestinantionTime(null);
-          setSouceTime(null);
-          setDestination("");
-          setSource("");
-          setetherCost("");
-          setvehicleId("");
-          setPassengers("");
-          setsourceId("");
-          setDestinationId("");
-          setDate(null);
-          router.push("/");
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
+  const { token, userData, setlongiLat, setdestiLongiLat } = React.useContext(UserContext);
+  
+  if (isLoading) {
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
+  }
   return (
     <>
       {/* <div className="flex h-full"> */}
