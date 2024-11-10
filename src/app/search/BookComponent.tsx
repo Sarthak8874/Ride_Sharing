@@ -60,15 +60,13 @@ const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
       Driver: ride.username,
       distance: formattedDifference,
       date: ride.rideDate,
-      // passengerCost: ride.passengerCost,
-      // passengers: ride.passengers,
+      passengerCost: ride.passengerCost,
+      passengers: ride.passengers,
     };
 
     rideBooking({ bookRide: bookingDetails });
 
     toast.success("Moving to booking page");
-    // const query = new URLSearchParams(bookingDetails).toString();
-    // console.log(`Query: ${query}`);
     setBookingDataa(bookingDetails);
     router.push(`/book/67238bd43869a75671bd9f1c`);
   };
