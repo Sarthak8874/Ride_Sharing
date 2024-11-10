@@ -123,23 +123,16 @@ const Page = ({ params: { id: bookId } }: { params: { id: string } }) => {
 
     try {
       await bookNow(
-        bookingData._id,
-        username,
-        "Pakistan",
-        "India",
+        "abcdefhg",
+        bookingDataa?.Driver,
+        bookingDataa?.fromCity,
+        bookingDataa?.toCity,
         bookingData.etherCost,
         seatsRequired,
-        "11/07/2024"
+        bookingDataa?.date
       );
 
       setIsDisabled(true);
-      await axios.post(
-        `${backendUrl}/book/${bookId}`,
-        { seatsRequired },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
 
       toast.success("Booking Successful, Redirecting to search...");
       setTimeout(() => (window.location.href = "/"), 2000);
@@ -180,9 +173,9 @@ const Page = ({ params: { id: bookId } }: { params: { id: string } }) => {
         <p>Loading...</p>
       ) : (
         <div className="min-w-[640px] mx-auto text-xl">
-          {/* <h1 className="text-5xl font-bold text-center mx-auto">
-            {formatDate(bookingDataa.)}
-          </h1> */}
+          <h1 className="text-5xl font-bold text-center mx-auto">
+            {formatDate(bookingDataa?.date || "")}
+          </h1>
           <div className="flex justify-between mx-6 my-6">
             <p>{bookingDataa?.fromCity}</p>
             <div className="flex flex-col items-center">

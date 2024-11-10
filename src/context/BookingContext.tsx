@@ -7,6 +7,7 @@ interface BookingData {
   toCity: string;
   Driver: string;
   distance: string;
+  date : string;
 }
 
 interface BookingContextProps {

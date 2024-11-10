@@ -59,6 +59,7 @@ const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
       toCity: ride.toCity,
       Driver: ride.username,
       distance: formattedDifference,
+      date: ride.rideDate,
       // passengerCost: ride.passengerCost,
       // passengers: ride.passengers,
     };
