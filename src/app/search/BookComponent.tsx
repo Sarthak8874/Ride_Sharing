@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { useBookingState } from "../../utils/Blockchain/book/useBookingState";
+import { ClientPageRoot } from "next/dist/client/components/client-page";
+import { useBooking } from '@/context/BookingContext';
 
 interface Ride {
   _id: string;
@@ -23,6 +25,7 @@ interface Ride {
 }
 
 const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
+  const { setBookingDataa } = useBooking();
   const router = useRouter();
   const { rideBooking } = useBookingState();
   const [bookRide, setBookRide] = useState<any>();
@@ -49,20 +52,24 @@ const BookComponent: React.FC<{ ride: Ride }> = ({ ride }) => {
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
     e.preventDefault();
+    console.log("handle submitted is cliecked")
     const bookingDetails = {
       rideDate: ride.rideDate,
       fromCity: ride.fromCity,
       toCity: ride.toCity,
       Driver: ride.username,
       distance: formattedDifference,
-      passengerCost: ride.passengerCost,
-      passengers: ride.passengers,
+      // passengerCost: ride.passengerCost,
+      // passengers: ride.passengers,
     };
 
     rideBooking({ bookRide: bookingDetails });
 
     toast.success("Moving to booking page");
-    router.push(`/book/67238bd43869a75671bd0a6c`);
+    // const query = new URLSearchParams(bookingDetails).toString();
+    // console.log(`Query: ${query}`);
+    setBookingDataa(bookingDetails);
+    router.push(`/book/67238bd43869a75671bd9f1c`);
   };
 
   return (

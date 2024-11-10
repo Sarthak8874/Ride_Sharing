@@ -7,6 +7,8 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import { UserProvider } from "@/utils/UserProvider";
 const inter = Inter({ subsets: ["latin"] });
+import { BookingProvider } from "@/context/BookingContext";
+
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -21,11 +23,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <BookingProvider>
         <UserProvider>
+
           <ToastContainer position="top-right" />
           <Navbar />
           {children}
         </UserProvider>
+        </BookingProvider>
       </body>
     </html>
   );

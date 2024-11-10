@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from 'next/router';
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import React, { useEffect, useState, useContext } from "react";
@@ -10,7 +10,7 @@ import { UserContext } from "@/utils/UserProvider";
 import withAuth from "@/components/withAuth";
 import { useBookingState } from "@/utils/Blockchain/book/useBookingState";
 import { useBookNow } from "../../../utils/Blockchain/book/useBookNow";
-
+import { useBooking } from '@/context/BookingContext';
 interface BookingData {
   _id: string;
   sourceId: string;
@@ -47,6 +47,9 @@ interface BookingData {
 }
 
 const Page = ({ params: { id: bookId } }: { params: { id: string } }) => {
+  // const router = useRouter();
+  const { bookingDataa } = useBooking();
+  const [queryData,setQuerydata] = useState<any>();
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
   const { userData } = useContext(UserContext);
   const [seatsRequired, setSeatsRequired] = useState<number>(1);
@@ -104,6 +107,13 @@ const Page = ({ params: { id: bookId } }: { params: { id: string } }) => {
       },
     });
   }, []);
+
+  // useEffect(() => {
+  //   if (router.isReady) {
+  //     const { rideDate, fromCity, toCity, Driver,distance} = router.query;
+  //     setQuerydata({ rideDate, fromCity, toCity, Driver,distance });
+  //   }
+  // }, [router.isReady]);
 
   const handleSubmit = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -170,16 +180,16 @@ const Page = ({ params: { id: bookId } }: { params: { id: string } }) => {
         <p>Loading...</p>
       ) : (
         <div className="min-w-[640px] mx-auto text-xl">
-          <h1 className="text-5xl font-bold text-center mx-auto">
-            {formatDate(bookingData.date)}
-          </h1>
+          {/* <h1 className="text-5xl font-bold text-center mx-auto">
+            {formatDate(bookingDataa.)}
+          </h1> */}
           <div className="flex justify-between mx-6 my-6">
-            <p>{bookingData.sourceName}</p>
+            <p>{bookingDataa?.fromCity}</p>
             <div className="flex flex-col items-center">
               <FaCar />
-              <p>{bookingData.distance} km</p>
+              <p>{bookingDataa?.distance} km</p>
             </div>
-            <p>{bookingData.destinationName}</p>
+            <p>{bookingDataa?.toCity}</p>
           </div>
           <div className="h-[10px] rounded-2xl bg-gray-200 my-6"></div>
           <div className="flex justify-between items-center mx-6">
@@ -190,7 +200,7 @@ const Page = ({ params: { id: bookId } }: { params: { id: string } }) => {
           </div>
           <div className="h-[10px] rounded-2xl bg-gray-200 my-6"></div>
           <div className="flex justify-between items-center mx-6">
-            <p>{`${bookingData.driver.firstName} ${bookingData.driver.lastName}`}</p>
+            <p>{bookingDataa?.Driver}</p>
             <img
               className="w-16"
               src="https://www.svgrepo.com/show/408476/user-person-profile-block-account-circle.svg"
