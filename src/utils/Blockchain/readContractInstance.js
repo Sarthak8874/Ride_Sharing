@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import { abi } from "./abi";
 import { contractAddress } from "./contractAddress";
-
 // ----- REAPLACE THE RPC PROIVER WITH YOURS ONE
 
 const infuraProvider = new ethers.JsonRpcProvider(
@@ -12,4 +11,4 @@ export const readContractInstance = new ethers.Contract(
   abi,
   infuraProvider
 );
-console.log(readContractInstance);
+console.log("first Read Contract ", readContractInstance);
