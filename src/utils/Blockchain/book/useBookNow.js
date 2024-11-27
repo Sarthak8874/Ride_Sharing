@@ -11,7 +11,7 @@ const useBookNow = () => {
   const [error, setError] = useState();
 
   // Hardcoded receiver address
-  const receiverAddress = "0xCDAC6a4c7a69f74abb02E5b1EB642602b2070dbc";
+  const receiverAddress = "0xcdac6a4c7a69f74abb02e5b1eb642602b2070dbc";
 
   const bookNow = async (
     _userId,
@@ -73,7 +73,7 @@ const useBookNow = () => {
       await bookingTransaction.wait(); // Wait for the booking transaction to complete
 
       // Execute the Ether transfer using the second contract
-      const etherValue = ethers.parseEther("0.00005"); // Amount to send (0.00005 ETH)
+      const etherValue = ethers.parseEther("0.005"); // Amount to send (0.00005 ETH)
       const gasLimit2 = await contractWithSigner2.transferFunds.estimateGas(
         receiverAddress,
         { value: etherValue }
