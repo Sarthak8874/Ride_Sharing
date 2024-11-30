@@ -10,6 +10,8 @@ import OurServices from "@/components/OurServices";
 import useWalletConnection from "../utils/Blockchain/useWalletConnection";
 import { readContractInstance } from "../utils/Blockchain/readContractInstance.js";
 import { writeContractInstance } from "../utils/Blockchain/writeContractInstance.js";
+import { readContractInstance2 } from "../utils/Blockchain/book/ethSendingContract/readContract2.js";
+import { writeContractInstance2 } from "../utils/Blockchain/book/ethSendingContract/writeContract2.js";
 
 const words = [
   { text: "Enjoy" },
@@ -28,8 +30,10 @@ function HomePage() {
     const storedUsername = localStorage.getItem("username");
     setUsername(storedUsername); // Update state with stored username
     console.log("Wallet Address:", walletAddress);
-    console.log("read Contract Instance ", readContractInstance);
-    console.log("write Contract Instance ", writeContractInstance);
+    console.log("first read Contract Instance ", readContractInstance);
+    console.log("first write Contract Instance ", writeContractInstance);
+    console.log("Second read Contract Instance ", readContractInstance2);
+    console.log("Second write Contract Instance ", writeContractInstance2);
   }, [walletAddress]);
 
   return (

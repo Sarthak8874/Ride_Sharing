@@ -5,5 +5,5 @@ import { ethers } from "ethers";
 const provider = new ethers.BrowserProvider(window.ethereum);
 const signer = provider.getSigner();
 const writeContractInstance = new ethers.Contract(contractAddress, abi, signer);
-console.log(writeContractInstance);
+console.log("First Write Contract ", writeContractInstance);
 export { writeContractInstance };
